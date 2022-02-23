@@ -122,10 +122,18 @@ footer {
     padding: 1em;
 }
 
+.header--navigation--home {
+    display: none;
+}
+
 @media screen and (max-width: 1000px) {
     
     .logo {
         display: none;
+    }
+
+    .header--navigation--home {
+        display: block;
     }
 
     .background {
@@ -153,7 +161,7 @@ footer {
 @media screen and (max-width: 600px) {
 
     .background {
-        height: 12.25em;
+        height: 15em;
     }
 
     .header {
