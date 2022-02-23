@@ -185,3 +185,26 @@ footer {
     }
 
 }
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+main.about p {
+    position: relative;
+    top:10em;
+    text-align: center;
+    font-family: "Lucida Console", "Arial";
+    font-size: large;
+}
+
+
+main.about h1 {
+    position: relative;
+    top:5em;
+    font-family: "Lucida Console", "Arial";
+}
