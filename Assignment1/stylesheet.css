@@ -238,7 +238,7 @@ main.about {
     font-family: "Lucida Console", "Arial";
 }
 
-main.index {
+.index {
     display: flex;
     gap: 2%
 
