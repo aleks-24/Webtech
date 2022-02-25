@@ -287,3 +287,10 @@ main.about {
     position: relative;
 }
 
+a.menuLink, a.menuLink:visited{
+    color: rgb(107, 107, 107);
+    text-decoration: none;
+}
+a.menuLink:hover, a.menuLink:active{
+    color: rgb(0, 0, 0);
+}
