@@ -151,7 +151,12 @@ footer {
     text-decoration: none;
 }
 
-@media screen and (max-width: 1000px) {
+.index {
+    display: flex;
+    gap: 2%
+}
+
+@media screen and (max-width: 1080px) {
     
     .logo {
         display: none;
@@ -183,10 +188,18 @@ footer {
 
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 720px) {
 
     .background {
         height: 15em;
+    }
+
+    .index {
+        display: block;
+    }
+
+    .index section {
+        margin-top: 1em;
     }
 
     .header {
@@ -235,13 +248,7 @@ main.about {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    font-family: "Lucida Console", "Arial";
-}
-
-.index {
-    display: flex;
-    gap: 2%
-
+    font-family: 'Lucida Console', 'Courier New', Courier, monospace;
 }
 
 .index--column{
@@ -269,7 +276,7 @@ main.about {
 
 .index p{
     position: relative;
-    font-family: 'Lucida Console', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family: 'Lucida Console', 'Courier New', Courier, monospace;
     font-style: oblique;
 }
 
