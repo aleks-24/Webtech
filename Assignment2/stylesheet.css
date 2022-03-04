@@ -1,0 +1,296 @@
+.logo {
+    display: block;
+    width: 5em;
+    height: 5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body {
+    margin: 0;
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.menu-item {
+    width: 18vw;
+    border-radius: 10px;
+}
+
+figcaption{
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.11), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+}
+
+figure {
+    margin: 1em 1em;
+}
+
+.background {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 8.5em;
+    height: 8.5em;
+    z-index: -1;
+    background-image: url("header.jpeg"); /* source: google.com */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.background::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(10px);
+}
+
+header {
+    padding-top: 0.5em;
+}
+
+header a {
+    text-decoration: none;
+    color: white;
+    font-size: 1.5em;
+}
+
+.header {
+    display: flex;
+    margin: 0 10%;
+    align-items: center;
+}
+
+
+main {
+    margin: 2em 10%;
+}
+
+.header--navigation {
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+    margin: 0;
+}
+
+ul {
+    list-style: none;
+    padding-left: inherit;
+}
+
+.header--navigation a {
+    margin: 0em 0.5em;
+    padding: 0.2em 0.5em;
+    display: block;
+    text-shadow: 1px 1px #121212;
+}
+
+.header--navigation a:hover {
+    text-decoration: underline;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+footer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.vacancies {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1em;
+}
+
+.vacancies section {
+    height: 100%;
+    position: relative;
+}
+
+.header--navigation--home {
+    display: none;
+}
+
+.vacancies--description {
+    font-size: 1.5em;
+}
+
+.vacancies--apply {
+    text-decoration: underline;
+    position: absolute;
+    bottom: 0;
+}
+
+.vacancies a {
+    display: block;
+    text-decoration: none;
+    color: black;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.11), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    padding: 1em;
+    transition: background-color 0.25s;
+}
+
+.vacancies a:hover {
+    background-color: rgba(225, 225, 225);
+}
+
+.vacancies a:hover .vacancies--apply {
+    text-decoration: none;
+}
+
+.index {
+    display: flex;
+    gap: 2%
+}
+
+@media screen and (max-width: 1080px) {
+    
+    .logo {
+        display: none;
+    }
+
+    .header--navigation--home {
+        display: block;
+    }
+
+    .background {
+        height: 4.5em;
+    }
+
+    .header {
+        justify-content: center;
+    }
+
+    .header--navigation {
+        padding: 0;
+    }
+
+    header {
+        padding: 1em 2em;
+    }
+
+    main {
+        margin: 1em 2em;
+    }
+
+}
+
+@media screen and (max-width: 720px) {
+
+    .background {
+        height: 15em;
+    }
+
+    .index {
+        display: block;
+    }
+
+    .index section {
+        margin-top: 1em;
+    }
+
+    .header {
+        margin: 0;
+        padding: 0;
+        justify-content: start;
+    }
+
+    .header--navigation {
+        flex-direction: column;
+        padding: 0;
+    }
+
+    .header--navigation a {
+        margin: 0;
+        padding: 0.2em 0;
+    }
+    
+    .vacancies {
+        display: block;
+    }
+
+    .vacancies a {
+        margin-bottom: 1em;
+    }
+
+}
+
+main.about p {
+    text-align: center;
+    font-size: large;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex-grow: 1;
+}
+
+main.about {
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-family: 'Lucida Console', 'Courier New', Courier, monospace;
+}
+
+.index--column{
+    padding: 15px;
+}
+
+.index img{
+    max-width: 100%;
+    height:30em;
+    object-fit: cover;
+}
+
+.index a{
+    background-color: orangered;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    position: absolute;
+    top: 25em;
+}
+
+.index p{
+    position: relative;
+    font-family: 'Lucida Console', 'Courier New', Courier, monospace;
+    font-style: oblique;
+}
+
+.index section{
+    background-color: rgba(255, 239, 239, 0.7);
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.11), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+a.menuLink, a.menuLink:visited{
+    color: rgb(107, 107, 107);
+    text-decoration: none;
+}
+a.menuLink:hover, a.menuLink:active{
+    color: rgb(0, 0, 0);
+}
