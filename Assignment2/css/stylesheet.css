@@ -35,7 +35,7 @@ figure {
     height: 8.5em;
     height: 8.5em;
     z-index: -1;
-    background-image: url("header.jpeg"); /* source: google.com */
+    background-image: url("../resources/header.jpeg"); /* source: google.com */
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
