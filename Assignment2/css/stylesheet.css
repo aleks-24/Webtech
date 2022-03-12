@@ -12,11 +12,6 @@ body {
     font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
-.menu-item {
-    width: 18vw;
-    border-radius: 10px;
-}
-
 figcaption{
     background-color: rgba(255, 255, 255, 0.7);
     border-radius: 5px;
@@ -293,4 +288,15 @@ a.menuLink, a.menuLink:visited{
 }
 a.menuLink:hover, a.menuLink:active{
     color: rgb(0, 0, 0);
+}
+
+.menuItem{
+    width: 18vw;
+    border-radius: 10px;
+}
+
+.caption{
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.11), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
 }

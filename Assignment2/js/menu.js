@@ -43,7 +43,6 @@ class Food{
         this.calories = calories;
         this.vegan = vegan;
         this.imageSrc = imageSrc;
-   
        }
    
        generateStuff(){
@@ -51,7 +50,14 @@ class Food{
            var image = document.createElement("IMG");
            image.setAttribute("src", this.imageSrc);
            image.setAttribute("alt", this.name);
-           content.appendChild(image);
+           image.classList.add("menuItem");
+           var caption = document.createElement("figcaption");
+           caption.innerHTML = this.name;
+           caption.classList.add("caption");
+            var result = document.createElement("div");
+            result.appendChild(image);
+            result.appendChild(caption);
+            return result;
        }
    }
 
@@ -62,12 +68,15 @@ class MenuSection{
     }
 
     generateItems(){ //Generate HTML for each item in this section
+        var table = document.createElement("table");
         for (const food of this.foods){
-            food.generateStuff();
+            var foodDiv = food.generateStuff()
+            table.appendChild(foodDiv);
+            //table manipulation here
         }
+        content.appendChild(table);
     }
 }
-
 
 
 class Burger extends Food{
@@ -88,14 +97,36 @@ class Drinks extends Food{
     }
 }
 
-burgerSection = new MenuSection("Chicken"); //mmm sjiken
-chickenSection = new MenuSection("Burgers");
+burgerSection = new MenuSection("Burgers"); 
+chickenSection = new MenuSection("Chicken"); //mmm sjiken
 drinkSection = new MenuSection("Drinks");
 
 menu = new Menu();
 menu.sections = [burgerSection, chickenSection, drinkSection];
 
-
+//push the food and drink items to their respective arrays
 burgerSection.foods.push(new Burger("resources/Menu-Burgers/B1.jpg")); 
+burgerSection.foods.push(new Burger("resources/Menu-Burgers/B2.jpg")); 
+burgerSection.foods.push(new Burger("resources/Menu-Burgers/B3.jpg")); 
+burgerSection.foods.push(new Burger("resources/Menu-Burgers/B4.jpg")); 
+burgerSection.foods.push(new Burger("resources/Menu-Burgers/B5.jpg")); 
+burgerSection.foods.push(new Burger("resources/Menu-Burgers/B6.jpg")); 
+
+chickenSection.foods.push(new Chicken("resources/Menu-Chicken/C1.jpg", "Basic Fried Chicken"));
+chickenSection.foods.push(new Chicken("resources/Menu-Chicken/C2.jpg", "Korean Fried Chicken"));
+chickenSection.foods.push(new Chicken("resources/Menu-Chicken/C3.jpg", "Spicy Fried Chicken"));
+chickenSection.foods.push(new Chicken("resources/Menu-Chicken/C4.jpg", "BBQ Fried Chicken"));
+chickenSection.foods.push(new Chicken("resources/Menu-Chicken/C5.jpg", "Vegan Fried Chicken"));
+chickenSection.foods.push(new Chicken("resources/Menu-Chicken/C6.jpg", "Chicken Drumstickes"));
+
+drinkSection.foods.push(new Drinks("resources/Menu-Drinks/CocaCola.jpg"));
+drinkSection.foods.push(new Drinks("resources/Menu-Drinks/Evian.jpg"));
+drinkSection.foods.push(new Drinks("resources/Menu-Drinks/Fanta.png"));
+drinkSection.foods.push(new Drinks("resources/Menu-Drinks/Lipton.png"));
+drinkSection.foods.push(new Drinks("resources/Menu-Drinks/Pepsi.png"));
+drinkSection.foods.push(new Drinks("resources/Menu-Drinks/Sprite.png"));
+
+console.log(burgerSection.foods[0]);
+
 menu.generateNav();
 menu.generateSections();
