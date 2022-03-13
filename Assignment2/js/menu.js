@@ -36,13 +36,14 @@ class Menu{
 }
 
 class Food{
-    constructor(imageSrc="", name="", price=0, spiciness = -1, calories = 0, vegan = false){
+    constructor(imageSrc="", name="", price=0, spiciness = -1, calories = 0, vegan = false, amount = 0){
         this.name = name;
         this.price = price;
         this.spiciness = spiciness;
         this.calories = calories;
         this.vegan = vegan;
         this.imageSrc = imageSrc;
+        this.amount = amount;
        }
 
        generateStuff(){
@@ -66,18 +67,19 @@ class Food{
             plus.innerHTML = "+"
             minus.setAttribute('name', "minus")
             minus.innerHTML = '-'
-            
+
             //Click event
             let x = 0;
-            minus.onclick = function(){if(x > 0){x--; value.innerHTML = x;}}
-            plus.onclick = function(){x++; value.innerHTML = x;}
             var value = document.createElement("span");
             value.innerHTML = x;
+            minus.onclick = function(){if(x > 0){x--; value.innerHTML = x;}}
+            plus.onclick = function(){x++; value.innerHTML = x;}
+            //console.log(x);
 
             result.appendChild(minus);
             result.appendChild(value);
             result.appendChild(plus);
-  
+
             return result;
        }
    }
@@ -92,24 +94,24 @@ class MenuSection{
         //Making a table
         var table = document.createElement("table");
         table.id = this.menuType;
-        /*var row1 = table.insertRow(0);
-        var row2 = table.insertRow(1);
-        var cell1 = row1.insertCell(0);
-        var cell2 = row1.insertCell(1);
-        var cell3 = row1.insertCell(2);
-        var cell4 = row2.insertCell(0);
-        var cell5 = row2.insertCell(1);
-        var cell6 = row2.insertCell(2);*/
 
-        for (const food of this.foods){
-            var foodCell = food.generateStuff()
-            table.appendChild(foodCell);
-            //table manipulation here
+        var i = 0;
+        const width = 3;
+        while(i < this.foods.length){
+            var newRow = table.insertRow(-1);
+            var iterOld = i;
+            while(i < (iterOld + width) && i < this.foods.length){
+                var food = this.foods[i];
+                var foodCell = food.generateStuff();
+                var cell = newRow.insertCell(-1);
+                cell.appendChild(foodCell);
+                i++;
+            }
         }
+        
         content.appendChild(table);
     }
 }
-
 
 class Burger extends Food{
     constructor(chicken = false, ...params){
@@ -119,8 +121,9 @@ class Burger extends Food{
 }
 
 class Chicken extends Food{
-    constructor(...params){
+    constructor(boneless = false, ...params){
         super(...params)
+        this.boneless = boneless;
     }
 }
 
@@ -139,19 +142,19 @@ menu = new Menu();
 menu.sections = [burgerSection, chickenSection, drinkSection];
 
 //push the food and drink items to their respective arrays
-burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B1.jpg", "Basic Burger")); 
+burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B1.jpg", "Basic Burger", amount = 0)); 
 burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B2.jpg", "Veggie Burger")); 
 burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B3.jpg", "Spicy Burger")); 
 burgerSection.foods.push(new Burger(true, "resources/Menu-Burgers/B4.jpg", "Basic Chicken Burger")); 
 burgerSection.foods.push(new Burger(true, "resources/Menu-Burgers/B5.jpg", "Veggie Chicken Burger")); 
 burgerSection.foods.push(new Burger(true, "resources/Menu-Burgers/B6.jpg", "Spicy Chicken Burger")); 
 
-chickenSection.foods.push(new Chicken("resources/Menu-Chicken/C1.jpg", "Basic Fried Chicken"));
-chickenSection.foods.push(new Chicken("resources/Menu-Chicken/C2.jpg", "Korean Fried Chicken"));
-chickenSection.foods.push(new Chicken("resources/Menu-Chicken/C3.jpg", "Spicy Fried Chicken"));
-chickenSection.foods.push(new Chicken("resources/Menu-Chicken/C4.jpg", "BBQ Fried Chicken"));
-chickenSection.foods.push(new Chicken("resources/Menu-Chicken/C5.jpg", "Vegan Fried Chicken"));
-chickenSection.foods.push(new Chicken("resources/Menu-Chicken/C6.jpg", "Chicken Drumstickes"));
+chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C1.jpg", "Basic Fried Chicken"));
+chickenSection.foods.push(new Chicken(true, "resources/Menu-Chicken/C2.jpg", "Korean Fried Chicken"));
+chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C3.jpg", "Spicy Fried Chicken"));
+chickenSection.foods.push(new Chicken(true, "resources/Menu-Chicken/C4.jpg", "BBQ Fried Chicken"));
+chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C5.jpg", "Vegan Fried Chicken"));
+chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C6.jpg", "Chicken Drumstickes"));
 
 drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/CocaCola.jpg", "Coca Cola"));
 drinkSection.foods.push(new Drinks(false, "resources/Menu-Drinks/Evian.jpg", "Evian"));
@@ -159,6 +162,8 @@ drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/Fanta.png", "Fan
 drinkSection.foods.push(new Drinks(false, "resources/Menu-Drinks/Lipton.png", "Lipton"));
 drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/Pepsi.png", "Pepsi Cola"));
 drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/Sprite.png", "Sprite"));
+
+console.log(burgerSection.foods);
 
 menu.generateNav();
 menu.generateSections();
