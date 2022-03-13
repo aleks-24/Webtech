@@ -57,7 +57,6 @@ class Food{
             var result = document.createElement("td");
             result.appendChild(image);
             result.appendChild(caption);
-            //console.log(result);
             return result;
        }
    }
@@ -71,8 +70,15 @@ class MenuSection{
     generateItems(){ //Generate HTML for each item in this section
         //Making a table
         var table = document.createElement("table");
-  
-        
+        table.id = this.menuType;
+        /*var row1 = table.insertRow(0);
+        var row2 = table.insertRow(1);
+        var cell1 = row1.insertCell(0);
+        var cell2 = row1.insertCell(1);
+        var cell3 = row1.insertCell(2);
+        var cell4 = row2.insertCell(0);
+        var cell5 = row2.insertCell(1);
+        var cell6 = row2.insertCell(2);*/
 
         for (const food of this.foods){
             var foodCell = food.generateStuff()
@@ -85,8 +91,9 @@ class MenuSection{
 
 
 class Burger extends Food{
-    constructor(...params){
+    constructor(chicken = false, ...params){
         super(...params)
+        this.chicken = chicken;
     }
 }
 
@@ -97,8 +104,9 @@ class Chicken extends Food{
 }
 
 class Drinks extends Food{
-    constructor(...params){
+    constructor(carbonated = true, ...params){
         super(...params)
+        this.carbonated = carbonated
     }
 }
 
@@ -110,12 +118,12 @@ menu = new Menu();
 menu.sections = [burgerSection, chickenSection, drinkSection];
 
 //push the food and drink items to their respective arrays
-burgerSection.foods.push(new Burger("resources/Menu-Burgers/B1.jpg")); 
-burgerSection.foods.push(new Burger("resources/Menu-Burgers/B2.jpg")); 
-burgerSection.foods.push(new Burger("resources/Menu-Burgers/B3.jpg")); 
-burgerSection.foods.push(new Burger("resources/Menu-Burgers/B4.jpg")); 
-burgerSection.foods.push(new Burger("resources/Menu-Burgers/B5.jpg")); 
-burgerSection.foods.push(new Burger("resources/Menu-Burgers/B6.jpg")); 
+burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B1.jpg", "Basic Burger")); 
+burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B2.jpg", "Veggie Burger")); 
+burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B3.jpg", "Spicy Burger")); 
+burgerSection.foods.push(new Burger(true, "resources/Menu-Burgers/B4.jpg", "Basic Chicken Burger")); 
+burgerSection.foods.push(new Burger(true, "resources/Menu-Burgers/B5.jpg", "Veggie Chicken Burger")); 
+burgerSection.foods.push(new Burger(true, "resources/Menu-Burgers/B6.jpg", "Spicy Chicken Burger")); 
 
 chickenSection.foods.push(new Chicken("resources/Menu-Chicken/C1.jpg", "Basic Fried Chicken"));
 chickenSection.foods.push(new Chicken("resources/Menu-Chicken/C2.jpg", "Korean Fried Chicken"));
@@ -124,14 +132,12 @@ chickenSection.foods.push(new Chicken("resources/Menu-Chicken/C4.jpg", "BBQ Frie
 chickenSection.foods.push(new Chicken("resources/Menu-Chicken/C5.jpg", "Vegan Fried Chicken"));
 chickenSection.foods.push(new Chicken("resources/Menu-Chicken/C6.jpg", "Chicken Drumstickes"));
 
-drinkSection.foods.push(new Drinks("resources/Menu-Drinks/CocaCola.jpg"));
-drinkSection.foods.push(new Drinks("resources/Menu-Drinks/Evian.jpg"));
-drinkSection.foods.push(new Drinks("resources/Menu-Drinks/Fanta.png"));
-drinkSection.foods.push(new Drinks("resources/Menu-Drinks/Lipton.png"));
-drinkSection.foods.push(new Drinks("resources/Menu-Drinks/Pepsi.png"));
-drinkSection.foods.push(new Drinks("resources/Menu-Drinks/Sprite.png"));
-
-console.log(burgerSection);
+drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/CocaCola.jpg", "Coca Cola"));
+drinkSection.foods.push(new Drinks(false, "resources/Menu-Drinks/Evian.jpg", "Evian"));
+drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/Fanta.png", "Fanta"));
+drinkSection.foods.push(new Drinks(false, "resources/Menu-Drinks/Lipton.png", "Lipton"));
+drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/Pepsi.png", "Pepsi Cola"));
+drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/Sprite.png", "Sprite"));
 
 menu.generateNav();
 menu.generateSections();
