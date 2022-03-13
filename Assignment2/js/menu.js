@@ -44,7 +44,7 @@ class Food{
         this.vegan = vegan;
         this.imageSrc = imageSrc;
        }
-   
+
        generateStuff(){
            //do HTML DOM stuff
            var image = document.createElement("IMG");
@@ -55,8 +55,29 @@ class Food{
            caption.innerHTML = this.name;
            caption.classList.add("caption");
             var result = document.createElement("td");
+
             result.appendChild(image);
             result.appendChild(caption);
+
+            //Creating plus and minus button
+            var plus = document.createElement("button");
+            var minus = document.createElement("button");
+            plus.setAttribute('name', "plus")
+            plus.innerHTML = "+"
+            minus.setAttribute('name', "minus")
+            minus.innerHTML = '-'
+            
+            //Click event
+            let x = 0;
+            minus.onclick = function(){if(x > 0){x--; value.innerHTML = x;}}
+            plus.onclick = function(){x++; value.innerHTML = x;}
+            var value = document.createElement("span");
+            value.innerHTML = x;
+
+            result.appendChild(minus);
+            result.appendChild(value);
+            result.appendChild(plus);
+  
             return result;
        }
    }
@@ -110,7 +131,7 @@ class Drinks extends Food{
     }
 }
 
-burgerSection = new MenuSection("Burgers"); 
+burgerSection = new MenuSection("Burgers"); //bourgir
 chickenSection = new MenuSection("Chicken"); //mmm sjiken
 drinkSection = new MenuSection("Drinks");
 
