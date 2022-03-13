@@ -54,9 +54,10 @@ class Food{
            var caption = document.createElement("figcaption");
            caption.innerHTML = this.name;
            caption.classList.add("caption");
-            var result = document.createElement("div");
+            var result = document.createElement("td");
             result.appendChild(image);
             result.appendChild(caption);
+            //console.log(result);
             return result;
        }
    }
@@ -68,10 +69,14 @@ class MenuSection{
     }
 
     generateItems(){ //Generate HTML for each item in this section
+        //Making a table
         var table = document.createElement("table");
+  
+        
+
         for (const food of this.foods){
-            var foodDiv = food.generateStuff()
-            table.appendChild(foodDiv);
+            var foodCell = food.generateStuff()
+            table.appendChild(foodCell);
             //table manipulation here
         }
         content.appendChild(table);
@@ -126,7 +131,7 @@ drinkSection.foods.push(new Drinks("resources/Menu-Drinks/Lipton.png"));
 drinkSection.foods.push(new Drinks("resources/Menu-Drinks/Pepsi.png"));
 drinkSection.foods.push(new Drinks("resources/Menu-Drinks/Sprite.png"));
 
-console.log(burgerSection.foods[0]);
+console.log(burgerSection);
 
 menu.generateNav();
 menu.generateSections();
