@@ -1,4 +1,5 @@
 content = document.getElementById("content");
+var basketDict = {};
 
 class Menu{
     constructor(){
@@ -36,14 +37,13 @@ class Menu{
 }
 
 class Food{
-    constructor(imageSrc="", name="", price=0, spiciness = -1, calories = 0, vegan = false, amount = 0){
+    constructor(imageSrc="", name="", price=0, spiciness = -1, calories = 0, vegan = false){
         this.name = name;
         this.price = price;
         this.spiciness = spiciness;
         this.calories = calories;
         this.vegan = vegan;
         this.imageSrc = imageSrc;
-        this.amount = amount;
        }
 
        generateStuff(){
@@ -70,12 +70,11 @@ class Food{
 
             //Click event
             let x = 0;
+            let name = this.name;
             var value = document.createElement("span");
             value.innerHTML = x;
-            minus.onclick = function(){if(x > 0){x--; value.innerHTML = x;}}
-            plus.onclick = function(){x++; value.innerHTML = x;}
-            //console.log(x);
-
+            minus.onclick = function(){if(x > 0){x--; value.innerHTML = x; basketDict[name] = x;}}
+            plus.onclick = function(){x++; value.innerHTML = x; basketDict[name] = x;}
             result.appendChild(minus);
             result.appendChild(value);
             result.appendChild(plus);
@@ -142,7 +141,7 @@ menu = new Menu();
 menu.sections = [burgerSection, chickenSection, drinkSection];
 
 //push the food and drink items to their respective arrays
-burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B1.jpg", "Basic Burger", amount = 0)); 
+burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B1.jpg", "Basic Burger")); 
 burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B2.jpg", "Veggie Burger")); 
 burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B3.jpg", "Spicy Burger")); 
 burgerSection.foods.push(new Burger(true, "resources/Menu-Burgers/B4.jpg", "Basic Chicken Burger")); 
@@ -163,7 +162,7 @@ drinkSection.foods.push(new Drinks(false, "resources/Menu-Drinks/Lipton.png", "L
 drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/Pepsi.png", "Pepsi Cola"));
 drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/Sprite.png", "Sprite"));
 
-console.log(burgerSection.foods);
+//console.log(burgerSection.foods[0]);
 
 menu.generateNav();
 menu.generateSections();
