@@ -1,5 +1,4 @@
 content = document.getElementById("content");
-var basketDict = {};
 
 class Menu{
     constructor(){
@@ -29,6 +28,77 @@ class Menu{
         content.appendChild(nav);
     }
 
+    generateBasket(){ //Generate basket
+        // search for existing basket
+        var basket = document.getElementById("basket");
+        var basketItems = document.getElementById("basket--items");
+        var total = document.getElementById("basket--total");
+        if (!basket){
+            basket = document.createElement("section");
+            basket.setAttribute("id", "basket");
+            // add h2
+            var h2 = document.createElement("h2");
+            h2.textContent = "Basket";
+            basket.appendChild(h2);
+            content.appendChild(basket);
+            // add div for basket items
+            basketItems = document.createElement("div");
+            basketItems.setAttribute("id", "basket--items");
+            basket.appendChild(basketItems);
+            // add total price with euro and two decimals
+            total = document.createElement("p");
+            total.textContent = "Total: €0.00";
+            total.setAttribute("id", "basket--total");
+            basket.appendChild(total);
+            // add button to minimise basketItems
+            var button = document.createElement("button");
+            button.setAttribute("id", "minimiseBasket");
+            button.textContent = "Collapse";
+            basket.appendChild(button);
+            // on click, hide basketItems
+            basketItems.style.display = "block";
+            button.onclick = function(){
+                if (basketItems.style.display == "block"){
+                    basketItems.style.display = "none";
+                    button.textContent = "Expand";
+                } else {
+                    basketItems.style.display = "block";
+                    button.textContent = "Collapse";
+                }
+            }
+            // add order button
+            var orderButton = document.createElement("button");
+            orderButton.textContent = "Order";
+            basket.appendChild(orderButton);
+            orderButton.onclick = function(){
+                alert("Order placed!");
+            }
+        } else {
+            basketItems.innerHTML = "";
+        }
+        // append all food in all sections with quantity to basket
+        var price = 0;
+        for (const section of this.sections){
+            for (const food of section.foods){
+                // ignore food without quantity
+                if (food.selected){
+                    price += food.price * food.selected;
+                    basketItems.appendChild(food.generateStuff(false));
+                }
+            }
+        }
+        if (basketItems.childElementCount === 0){
+            // hide basket
+            basket.style.display = "none";
+            return;
+        } else {
+            // show basket
+            basket.style.display = "block";
+        }
+        // update total price
+        total.textContent = "Total: €" + price.toFixed(2);
+    }
+
     generateSections(){ //Generate HTML for each section
         this.sections.forEach(section => {
             section.generateItems();            
@@ -37,47 +107,68 @@ class Menu{
 }
 
 class Food{
-    constructor(imageSrc="", name="", price=0, spiciness = -1, calories = 0, vegan = false){
+    constructor(imageSrc="", name="", price=420.69, spiciness = -1, calories = 0, vegan = false){
         this.name = name;
         this.price = price;
         this.spiciness = spiciness;
         this.calories = calories;
         this.vegan = vegan;
         this.imageSrc = imageSrc;
+        this.selected = 0;
        }
 
-       generateStuff(){
+       generateStuff(controls=true){
            //do HTML DOM stuff
            var image = document.createElement("IMG");
            image.setAttribute("src", this.imageSrc);
            image.setAttribute("alt", this.name);
            image.classList.add("menuItem");
            var caption = document.createElement("figcaption");
-           caption.innerHTML = this.name;
+           caption.innerHTML = controls ? this.name : "";
            caption.classList.add("caption");
+            // add price to caption, with euro sign and two decimal places
+            var price = document.createElement("p");
+            price.innerHTML = "€" + this.price.toFixed(2);
+            price.classList.add("price");
+            caption.appendChild(price);
+
             var result = document.createElement("td");
 
             result.appendChild(image);
             result.appendChild(caption);
 
             //Creating plus and minus button
-            var plus = document.createElement("button");
-            var minus = document.createElement("button");
-            plus.setAttribute('name', "plus")
-            plus.innerHTML = "+"
-            minus.setAttribute('name', "minus")
-            minus.innerHTML = '-'
+            if (controls){
+                var plus = document.createElement("button");
+                var minus = document.createElement("button");
+                plus.setAttribute('name', "plus")
+                plus.innerHTML = "+"
+                minus.setAttribute('name', "minus")
+                minus.innerHTML = '-'
 
-            //Click event
-            let x = 0;
-            let name = this.name;
-            var value = document.createElement("span");
-            value.innerHTML = x;
-            minus.onclick = function(){if(x > 0){x--; value.innerHTML = x; basketDict[name] = x;}}
-            plus.onclick = function(){x++; value.innerHTML = x; basketDict[name] = x;}
-            result.appendChild(minus);
-            result.appendChild(value);
-            result.appendChild(plus);
+                //Click event
+                let name = this.name;
+                var value = document.createElement("span");
+                value.innerHTML = this.selected;
+                minus.onclick = () => {
+                    if(this.selected > 0){this.selected--; value.innerHTML = this.selected; menu.generateBasket();}
+                    // set selected class
+                    if (this.selected === 0){
+                        result.classList.remove("menu--selected");
+                    }
+                }
+                plus.onclick = () => {
+                    this.selected++; value.innerHTML = this.selected; menu.generateBasket();
+                    result.classList.add("menu--selected");
+                }
+                result.appendChild(minus);
+                result.appendChild(value);
+                result.appendChild(plus);
+            } else {
+                var value = document.createElement("span");
+                value.innerHTML = this.selected;
+                result.appendChild(value);
+            }
 
             return result;
        }
@@ -91,6 +182,10 @@ class MenuSection{
 
     generateItems(){ //Generate HTML for each item in this section
         //Making a table
+        var section = document.createElement("section");
+        var h2 = document.createElement("h2");
+        h2.textContent = this.menuType;
+
         var table = document.createElement("table");
         table.id = this.menuType;
 
@@ -108,7 +203,9 @@ class MenuSection{
             }
         }
         
-        content.appendChild(table);
+        section.appendChild(h2);
+        section.appendChild(table);
+        content.appendChild(section);
     }
 }
 
@@ -164,5 +261,6 @@ drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/Sprite.png", "Sp
 
 //console.log(burgerSection.foods[0]);
 
+menu.generateBasket();
 menu.generateNav();
 menu.generateSections();

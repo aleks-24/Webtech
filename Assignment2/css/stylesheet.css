@@ -300,3 +300,37 @@ a.menuLink:hover, a.menuLink:active{
     border-radius: 5px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.11), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
 }
+
+.price {
+    margin: 0;
+}
+
+#basket {
+    /* stick to top using sticky */
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: rgba(255, 255, 255);
+    /* soft bottom shadow */
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.11), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+    padding: 1em;
+}
+
+#basket .menuItem {
+    width: 5em;
+}
+
+#basket--items {
+    /* horizontal scroll */
+    overflow-x: auto;
+}
+
+#basket td {
+    padding: 0.5em;
+}
+
+.menu--selected {
+    /* yellow glow */
+    background-color: rgba(255, 255, 0, 0.7);
+}
