@@ -13,7 +13,7 @@ class Menu{
             var link = document.createElement("A");
             
             link.setAttribute("href", "#" + section.menuType);
-            link.setAttribute("class", "menuLink")
+            link.setAttribute("class", "menuLink");
             link.textContent = section.menuType;
             element.appendChild(link);
             list.appendChild(element);
@@ -141,10 +141,10 @@ class Food{
             if (controls){
                 var plus = document.createElement("button");
                 var minus = document.createElement("button");
-                plus.setAttribute('name', "plus")
-                plus.innerHTML = "+"
-                minus.setAttribute('name', "minus")
-                minus.innerHTML = '-'
+                plus.setAttribute('name', "plus");
+                plus.innerHTML = "+";
+                minus.setAttribute('name', "minus");
+                minus.innerHTML = '-';
 
                 //Click event
                 let name = this.name;
@@ -161,14 +161,9 @@ class Food{
                     this.selected++; value.innerHTML = this.selected; menu.generateBasket();
                     result.classList.add("menu--selected");
                 }
-
-                // create div for buttons
-                var buttons = document.createElement("div");
-                buttons.classList.add("menu--buttons");
-                buttons.appendChild(minus);
-                buttons.appendChild(value);
-                buttons.appendChild(plus);
-                result.appendChild(buttons);
+                result.appendChild(minus);
+                result.appendChild(value);
+                result.appendChild(plus);
             } else {
                 var value = document.createElement("span");
                 value.innerHTML = this.selected;
@@ -216,22 +211,22 @@ class MenuSection{
 
 class Burger extends Food{
     constructor(chicken = false, ...params){
-        super(...params)
+        super(...params);
         this.chicken = chicken;
     }
 }
 
 class Chicken extends Food{
     constructor(boneless = false, ...params){
-        super(...params)
+        super(...params);
         this.boneless = boneless;
     }
 }
 
 class Drinks extends Food{
     constructor(carbonated = true, ...params){
-        super(...params)
-        this.carbonated = carbonated
+        super(...params);
+        this.carbonated = carbonated;
     }
 }
 
