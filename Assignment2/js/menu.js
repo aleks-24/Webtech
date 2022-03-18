@@ -235,8 +235,8 @@ class Drinks extends Food{
     }
 }
 
-burgerSection = new MenuSection("Burgers"); //bourgir
-chickenSection = new MenuSection("Chicken"); //mmm sjiken
+burgerSection = new MenuSection("Burgers"); 
+chickenSection = new MenuSection("Chicken");
 drinkSection = new MenuSection("Drinks");
 
 menu = new Menu();
@@ -255,7 +255,7 @@ chickenSection.foods.push(new Chicken(true, "resources/Menu-Chicken/C2.jpg", "Ko
 chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C3.jpg", "Spicy Fried Chicken", 4.40, 5, 640, false));
 chickenSection.foods.push(new Chicken(true, "resources/Menu-Chicken/C4.jpg", "BBQ Fried Chicken", 4.30, 3, 690, false));
 chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C5.jpg", "Vegan Fried Chicken", 4.80, 2, 500, true));
-chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C6.jpg", "Chicken Drumstickes", 5.00, 2, 670, false));
+chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C6.jpg", "Chicken Drumsticks", 5.00, 2, 670, false));
 
 drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/CocaCola.jpg", "Coca Cola", 2.30, calories = 40));
 drinkSection.foods.push(new Drinks(false, "resources/Menu-Drinks/Evian.jpg", "Evian", 2.00, calories = 0));
