@@ -161,9 +161,14 @@ class Food{
                     this.selected++; value.innerHTML = this.selected; menu.generateBasket();
                     result.classList.add("menu--selected");
                 }
-                result.appendChild(minus);
-                result.appendChild(value);
-                result.appendChild(plus);
+                
+                // create div for buttons
+                var buttons = document.createElement("div");
+                buttons.classList.add("menu--buttons");
+                buttons.appendChild(minus);
+                buttons.appendChild(value);
+                buttons.appendChild(plus);
+                result.appendChild(buttons);
             } else {
                 var value = document.createElement("span");
                 value.innerHTML = this.selected;
