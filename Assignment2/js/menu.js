@@ -238,28 +238,26 @@ menu = new Menu();
 menu.sections = [burgerSection, chickenSection, drinkSection];
 
 //push the food and drink items to their respective arrays
-burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B1.jpg", "Basic Burger")); 
-burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B2.jpg", "Veggie Burger")); 
-burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B3.jpg", "Spicy Burger")); 
-burgerSection.foods.push(new Burger(true, "resources/Menu-Burgers/B4.jpg", "Basic Chicken Burger")); 
-burgerSection.foods.push(new Burger(true, "resources/Menu-Burgers/B5.jpg", "Veggie Chicken Burger")); 
-burgerSection.foods.push(new Burger(true, "resources/Menu-Burgers/B6.jpg", "Spicy Chicken Burger")); 
+burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B1.jpg", "Basic Burger", 4.50, 2, 480, false)); 
+burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B2.jpg", "Veggie Burger", 4.80, 2, 500, true)); 
+burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B3.jpg", "Spicy Burger", 4.60, 5, 500, false)); 
+burgerSection.foods.push(new Burger(true, "resources/Menu-Burgers/B4.jpg", "Basic Chicken Burger", 4.50, 2, 350, false)); 
+burgerSection.foods.push(new Burger(true, "resources/Menu-Burgers/B5.jpg", "Veggie Chicken Burger",4.80, 2, 240, true)); 
+burgerSection.foods.push(new Burger(true, "resources/Menu-Burgers/B6.jpg", "Spicy Chicken Burger", 4.60, 5, 365, false)); 
 
-chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C1.jpg", "Basic Fried Chicken"));
-chickenSection.foods.push(new Chicken(true, "resources/Menu-Chicken/C2.jpg", "Korean Fried Chicken"));
-chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C3.jpg", "Spicy Fried Chicken"));
-chickenSection.foods.push(new Chicken(true, "resources/Menu-Chicken/C4.jpg", "BBQ Fried Chicken"));
-chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C5.jpg", "Vegan Fried Chicken"));
-chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C6.jpg", "Chicken Drumstickes"));
+chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C1.jpg", "Basic Fried Chicken", 4.00, 3, 600, false));
+chickenSection.foods.push(new Chicken(true, "resources/Menu-Chicken/C2.jpg", "Korean Fried Chicken", 4.30, 4, 655, false));
+chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C3.jpg", "Spicy Fried Chicken", 4.40, 5, 640, false));
+chickenSection.foods.push(new Chicken(true, "resources/Menu-Chicken/C4.jpg", "BBQ Fried Chicken", 4.30, 3, 690, false));
+chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C5.jpg", "Vegan Fried Chicken", 4.80, 2, 500, true));
+chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C6.jpg", "Chicken Drumstickes", 5.00, 2, 670, false));
 
-drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/CocaCola.jpg", "Coca Cola"));
-drinkSection.foods.push(new Drinks(false, "resources/Menu-Drinks/Evian.jpg", "Evian"));
-drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/Fanta.png", "Fanta"));
-drinkSection.foods.push(new Drinks(false, "resources/Menu-Drinks/Lipton.png", "Lipton"));
-drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/Pepsi.png", "Pepsi Cola"));
-drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/Sprite.png", "Sprite"));
-
-//console.log(burgerSection.foods[0]);
+drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/CocaCola.jpg", "Coca Cola", 2.30, calories = 40));
+drinkSection.foods.push(new Drinks(false, "resources/Menu-Drinks/Evian.jpg", "Evian", 2.00, calories = 0));
+drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/Fanta.png", "Fanta", 2.30, calories = 30));
+drinkSection.foods.push(new Drinks(false, "resources/Menu-Drinks/Lipton.png", "Lipton", 2.20, calories = 5));
+drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/Pepsi.png", "Pepsi Cola", 2.30, calories = 40));
+drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/Sprite.png", "Sprite", 2.20, calories = 5));
 
 menu.generateBasket();
 menu.generateNav();
