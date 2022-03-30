@@ -1,0 +1,14 @@
+{
+  "name": "dutchfriedchicken",
+  "version": "1.0.0",
+  "description": "KFC but Dutch",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "Lena, Alex, Marlinde",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}
