@@ -242,28 +242,92 @@ drinkSection = new MenuSection("Drinks");
 menu = new Menu();
 menu.sections = [burgerSection, chickenSection, drinkSection];
 
+
+
+function loadDoc(){
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function(){processXML(this)}
+    xhttp.open("GET", "xml/menu.xml")
+    xhttp.send()
+}
+
+
+function processXML(xml){
+    const xmlDoc = xml.responseXML;
+    const burgers = xmlDoc.getElementsByTagName("burgers")[0].getElementsByTagName("burger");
+    for (let i = 0; i < burgers.length; i++){
+        burger = burgers[i]
+        const chicken = burger.getElementsByTagName("chicken")[0].childNodes[0].nodeValue === "true";
+        const img = burger.getElementsByTagName("image")[0].childNodes[0].nodeValue;
+        const name = burger.getElementsByTagName("name")[0].childNodes[0].nodeValue;
+        const price = parseFloat(burger.getElementsByTagName("price")[0].childNodes[0].nodeValue);
+        const spiciness = burger.getElementsByTagName("spiciness")[0].childNodes[0].nodeValue;
+        const calories = burger.getElementsByTagName("calories")[0].childNodes[0].nodeValue;
+        const vegan = burger.getElementsByTagName("vegan")[0].childNodes[0].nodeValue === "true";
+        burgerSection.foods.push(new Burger(chicken, img, name, price, spiciness, calories, vegan));
+    }
+
+    const chickens = xmlDoc.getElementsByTagName("chickens")[0].getElementsByTagName("chicken");
+    for (let i = 0; i < chickens.length; i++){
+        chicken = chickens[i]
+        console.log(chicken)
+        console.log(chicken.getElementsByTagName("boneless")[0])
+        const boneless = chicken.getElementsByTagName("boneless")[0].childNodes[0].nodeValue === "true";
+        const img = chicken.getElementsByTagName("image")[0].childNodes[0].nodeValue;
+        const name = chicken.getElementsByTagName("name")[0].childNodes[0].nodeValue;
+        const price = parseFloat(chicken.getElementsByTagName("price")[0].childNodes[0].nodeValue);
+        const spiciness = chicken.getElementsByTagName("spiciness")[0].childNodes[0].nodeValue;
+        const calories = chicken.getElementsByTagName("calories")[0].childNodes[0].nodeValue;
+        const vegan = chicken.getElementsByTagName("vegan")[0].childNodes[0].nodeValue === "true";
+        chickenSection.foods.push(new Chicken(boneless, img, name, price, spiciness, calories, vegan));
+    }
+
+    const drinks = xmlDoc.getElementsByTagName("drinks")[0].getElementsByTagName("drink");
+    for (let i = 0; i < drinks.length; i++){
+        drink = drinks[i]
+        const carbonated = drink.getElementsByTagName("carbonated")[0].childNodes[0].nodeValue === "true";
+        const img = drink.getElementsByTagName("image")[0].childNodes[0].nodeValue;
+        const name = drink.getElementsByTagName("name")[0].childNodes[0].nodeValue;
+        const price = parseFloat(drink.getElementsByTagName("price")[0].childNodes[0].nodeValue);
+        const spiciness = drink.getElementsByTagName("spiciness")[0].childNodes[0].nodeValue;
+        const calories = drink.getElementsByTagName("calories")[0].childNodes[0].nodeValue;
+        const vegan = drink.getElementsByTagName("vegan")[0].childNodes[0].nodeValue === "true";
+        drinkSection.foods.push(new Drinks(carbonated, img, name, price, spiciness, calories, vegan));
+    }
+
+
+
+    menu.generateBasket();
+    menu.generateNav();
+    menu.generateSections();
+}
+loadDoc()
+
+
+
+
 //push the food and drink items to their respective arrays
-burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B1.jpg", "Basic Burger", 4.50, 2, 480, false)); 
-burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B2.jpg", "Veggie Burger", 4.80, 2, 500, true)); 
-burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B3.jpg", "Spicy Burger", 4.60, 5, 500, false)); 
-burgerSection.foods.push(new Burger(true, "resources/Menu-Burgers/B4.jpg", "Basic Chicken Burger", 4.50, 2, 350, false)); 
-burgerSection.foods.push(new Burger(true, "resources/Menu-Burgers/B5.jpg", "Veggie Chicken Burger",4.80, 2, 240, true)); 
-burgerSection.foods.push(new Burger(true, "resources/Menu-Burgers/B6.jpg", "Spicy Chicken Burger", 4.60, 5, 365, false)); 
+// burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B1.jpg", "Basic Burger", 4.50, 2, 480, false)); 
+// burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B2.jpg", "Veggie Burger", 4.80, 2, 500, true)); 
+// burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B3.jpg", "Spicy Burger", 4.60, 5, 500, false)); 
+// burgerSection.foods.push(new Burger(true, "resources/Menu-Burgers/B4.jpg", "Basic Chicken Burger", 4.50, 2, 350, false)); 
+// burgerSection.foods.push(new Burger(true, "resources/Menu-Burgers/B5.jpg", "Veggie Chicken Burger",4.80, 2, 240, true)); 
+// burgerSection.foods.push(new Burger(true, "resources/Menu-Burgers/B6.jpg", "Spicy Chicken Burger", 4.60, 5, 365, false)); 
 
-chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C1.jpg", "Basic Fried Chicken", 4.00, 3, 600, false));
-chickenSection.foods.push(new Chicken(true, "resources/Menu-Chicken/C2.jpg", "Korean Fried Chicken", 4.30, 4, 655, false));
-chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C3.jpg", "Spicy Fried Chicken", 4.40, 5, 640, false));
-chickenSection.foods.push(new Chicken(true, "resources/Menu-Chicken/C4.jpg", "BBQ Fried Chicken", 4.30, 3, 690, false));
-chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C5.jpg", "Vegan Fried Chicken", 4.80, 2, 500, true));
-chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C6.jpg", "Chicken Drumstickes", 5.00, 2, 670, false));
+// chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C1.jpg", "Basic Fried Chicken", 4.00, 3, 600, false));
+// chickenSection.foods.push(new Chicken(true, "resources/Menu-Chicken/C2.jpg", "Korean Fried Chicken", 4.30, 4, 655, false));
+// chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C3.jpg", "Spicy Fried Chicken", 4.40, 5, 640, false));
+// chickenSection.foods.push(new Chicken(true, "resources/Menu-Chicken/C4.jpg", "BBQ Fried Chicken", 4.30, 3, 690, false));
+// chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C5.jpg", "Vegan Fried Chicken", 4.80, 2, 500, true));
+// chickenSection.foods.push(new Chicken(false, "resources/Menu-Chicken/C6.jpg", "Chicken Drumstickes", 5.00, 2, 670, false));
 
-drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/CocaCola.jpg", "Coca Cola", 2.30, calories = 40));
-drinkSection.foods.push(new Drinks(false, "resources/Menu-Drinks/Evian.jpg", "Evian", 2.00, calories = 0));
-drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/Fanta.png", "Fanta", 2.30, calories = 30));
-drinkSection.foods.push(new Drinks(false, "resources/Menu-Drinks/Lipton.png", "Lipton", 2.20, calories = 5));
-drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/Pepsi.png", "Pepsi Cola", 2.30, calories = 40));
-drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/Sprite.png", "Sprite", 2.20, calories = 5));
+// drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/CocaCola.jpg", "Coca Cola", 2.30, calories = 40));
+// drinkSection.foods.push(new Drinks(false, "resources/Menu-Drinks/Evian.jpg", "Evian", 2.00, calories = 0));
+// drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/Fanta.png", "Fanta", 2.30, calories = 30));
+// drinkSection.foods.push(new Drinks(false, "resources/Menu-Drinks/Lipton.png", "Lipton", 2.20, calories = 5));
+// drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/Pepsi.png", "Pepsi Cola", 2.30, calories = 40));
+// drinkSection.foods.push(new Drinks(true, "resources/Menu-Drinks/Sprite.png", "Sprite", 2.20, calories = 5));
 
-menu.generateBasket();
-menu.generateNav();
-menu.generateSections();
+//menu.generateBasket();
+//menu.generateNav();
+//menu.generateSections();
