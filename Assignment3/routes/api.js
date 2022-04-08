@@ -7,22 +7,16 @@ This file is the API for the application, it is used to get the data from the da
 // create express router for api
 const express = require('express');
 const router = express.Router();
+const util = require('util');
 
 // sqlite database
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('DFC.db');
 
+const dball = util.promisify(db.all);
+
 // import bcrypt
 const bcrypt = require('bcrypt');
-
-// session test
-router.get('/session', (req, res) => {
-    if (req.session.user) {
-        res.send(req.session.user);
-    } else {
-        res.send('No session');
-    }
-});
 
 // auth endpoint
 router.post('/auth', (req, res) => {
@@ -32,7 +26,7 @@ router.post('/auth', (req, res) => {
 
     // check if they exist
     if (!username || !password) {
-        res.status(401).json({
+        res.status(400).json({
             success: false,
             message: 'Username or password is missing.'
         });
@@ -65,7 +59,7 @@ router.post('/auth', (req, res) => {
                     });
                 } else {
                     // if the password is incorrect, send an error
-                    res.status(401).json({
+                    res.status(400).json({
                         success: false,
                         message: "Incorrect password"
                     });
@@ -73,7 +67,7 @@ router.post('/auth', (req, res) => {
             });
         } else {
             // if the username doesn't exist, send an error
-            res.status(401).json({
+            res.status(400).json({
                 success: false,
                 message: "Username doesn't exist"
             });
@@ -81,8 +75,41 @@ router.post('/auth', (req, res) => {
     });
 });
 
+// get logged in user
+router.get('/user', (req, res) => {
+    // check if the user is logged in
+    if (!req.session.user) {
+        res.status(400).json({
+            success: false,
+            message: "Not logged in"
+        });
+        return;
+    }
+
+    // get the user
+    db.get("SELECT Username as username, FirstName as firstname, LastName as lastname, PhoneNumber as phonenumber, EmailAddress as email, PostalCode as postcode, Address as address FROM User WHERE UserID = ?", req.session.user, (err, row) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({
+                success: false,
+                message: "Internal server error"
+            });
+        } else if (row) {
+            res.status(200).json({
+                success: true,
+                user: row
+            });
+        } else {
+            res.status(500).json({
+                success: false,
+                message: "Internal server error"
+            });
+        }
+    });
+});
+
 // register user on post to /users page
-router.post('/users', (req, res) => {
+router.post('/user', (req, res) => {
     // get details from request body
     const username = req.body.username;
     const password = req.body.password;
@@ -95,7 +122,7 @@ router.post('/users', (req, res) => {
 
     // check password is at least 4 characters long
     if (!password || password.length < 3) {
-        res.status(401).json({
+        res.status(400).json({
             success: false,
             message: 'Password must be at least 4 characters long'
         });
@@ -104,7 +131,7 @@ router.post('/users', (req, res) => {
 
     // check if firstname and lastname exist
     if (!firstname || !lastname) {
-        res.status(401).json({
+        res.status(400).json({
             success: false,
             message: 'First name and last name are required'
         });
@@ -113,7 +140,7 @@ router.post('/users', (req, res) => {
 
     // check if username is not empty
     if (!username) {
-        res.status(401).json({
+        res.status(400).json({
             success: false,
             message: 'Username is required'
         });
@@ -122,7 +149,7 @@ router.post('/users', (req, res) => {
 
     // check if email is not empty
     if (!email) {
-        res.status(401).json({
+        res.status(400).json({
             success: false,
             message: 'Email is required'
         });
@@ -131,7 +158,7 @@ router.post('/users', (req, res) => {
 
     // check if address is not empty
     if (!address) {
-        res.status(401).json({
+        res.status(400).json({
             success: false,
             message: 'Address is required'
         });
@@ -140,7 +167,7 @@ router.post('/users', (req, res) => {
 
     // check if postcode is not empty
     if (!postcode) {
-        res.status(401).json({
+        res.status(400).json({
             success: false,
             message: 'Postcode is required'
         });
@@ -149,7 +176,7 @@ router.post('/users', (req, res) => {
 
     // check if phonenumber is not empty
     if (!phonenumber) {
-        res.status(401).json({
+        res.status(400).json({
             success: false,
             message: 'Phone number is required'
         });
@@ -158,7 +185,7 @@ router.post('/users', (req, res) => {
 
     db.get("SELECT * FROM User WHERE Username = ?", username, (err, row) => {
         if (row) {
-            res.status(401).json({
+            res.status(400).json({
                 success: false,
                 message: 'Username already exists'
             });
@@ -168,7 +195,7 @@ router.post('/users', (req, res) => {
         // check if email is unique
         db.get("SELECT * FROM User WHERE Email = ?", email, (err, row) => {
             if (row) {
-                res.status(401).json({
+                res.status(400).json({
                     success: false,
                     message: 'Email already exists'
                 });
@@ -196,20 +223,59 @@ router.post('/users', (req, res) => {
     });
 });
 
-// get user details on get to /users/:id page
-router.get('/users/:uid', (req, res) => {
-    const uid = req.params.uid;
-    res.send(`User id: ${uid}`);
+// get list of orders
+router.get('/user/orders', async (req, res) => {
+    // check if the user is logged in
+    if (!req.session.user) {
+        res.status(400).json({
+            success: false,
+            message: "Not logged in"
+        });
+        return;
+    }
+
+    // get the orders
+    db.all("SELECT OrderID as id, OrderTime as time, OrderStatus as status FROM Orders WHERE UserID = ?", req.session.user, (err, rows) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({
+                success: false,
+                message: "Internal server error"
+            });
+            return;
+        } else if (!rows) {
+            res.status(500).json({
+                success: false,
+                message: "Internal server error"
+            });
+            return;
+        }
+
+        // get order products
+        for (let i = 0; i < rows.length; i++) {
+            const products = dball("SELECT FoodID as id, Quantity as quantity FROM OrderProduct WHERE OrderID = ?", rows[i].id);
+            
+            if (!products) {
+                res.status(500).json({
+                    success: false,
+                    message: "Internal server error"
+                });
+                return;
+            }
+
+            // add products to order
+            rows[i].products = products;
+        }
+
+        res.status(200).json({
+            success: true,
+            orders: rows
+        });
+    });
 });
 
-// get list of orders on get to /users/:id/orders page
-router.get('/users/:uid/orders', (req, res) => {
-    const uid = req.params.uid;
-    res.send(`User id: ${uid}`);
-});
-
-// get order details on get to /users/:id/orders/:oid page
-router.get('/users/:uid/orders/:oid', (req, res) => {
+// get order details
+router.get('/user/orders/:oid', (req, res) => {
     const uid = req.params.uid;
     const oid = req.params.oid;
     res.send(`User id: ${uid}, Order id: ${oid}`);
