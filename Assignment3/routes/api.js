@@ -178,7 +178,7 @@ router.post('/users', (req, res) => {
             // hash password with bcrypt
             const hashedPassword = bcrypt.hashSync(password, 10);
             // insert user into database
-            db.run("INSERT INTO User (Username, Password, EmailAddress, FirstName, LastName, Address, PhoneNumber, PostalCode) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [username, hashedPassword, email, firstname, lastname, address, phonenumber, postcode], function(err) {
+            db.run("INSERT INTO User (Username, Password, EmailAddress, FirstName, LastName, Address, PhoneNumber, PostalCode) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [username, hashedPassword, email, firstname, lastname, address, phonenumber, postcode], function (err) {
                 if (err) {
                     console.log(err);
                     res.status(500).json({
@@ -194,6 +194,57 @@ router.post('/users', (req, res) => {
             });
         });
     });
+});
+
+//register order
+router.post('/order', (req, res) => {
+    const userId = req.userID;
+    const order = req.order;
+    var orderID;
+
+    //get previous orderID
+    db.get("SELECT seq FROM sql_sequence WHERE name = Orders", (err, row) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({
+                success: false,
+                message: "Internal server error"
+            });
+        } else if (row) {
+            orderID = row.orderID + 1;
+        }
+        else {
+            // if the previous order doesn't exist, send an error
+            res.status(500).json({
+                success: false,
+                message: "Internal server error"
+            });
+        }
+    });
+
+    db.run("INSERT INTO Orders (UserId, Status, Timestamp) VALUES (?,?,?)", [userId, 'Processing', Date.now()], function (err) {
+        if (err) {
+            console.log(err);
+            res.status(500).json({
+                success: false,
+                message: 'Error registering order'
+            });
+        } else {
+            res.status(200).json({
+                success: true,
+                message: 'Success adding order'
+
+            })
+            var stmnt = db.prepare('INSERT INTO OrderProduct VALUES (?,?,?)');
+            order.forEach(item => {
+                var foodId = item.FoodID;
+                var quantity = item.Quantity;
+                stmnt.run(foodId, orderID, quantity);
+            })
+            stmnt.finalize();
+        }
+    }
+    );
 });
 
 // get user details on get to /users/:id page
