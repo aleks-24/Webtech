@@ -4,7 +4,8 @@
   "description": "KFC but Dutch",
   "main": "index.js",
   "scripts": {
-    "test": "node index.js"
+    "setup": "node db.js",
+    "server": "node index.js"
   },
   "author": "Lena, Alex, Marlinde",
   "license": "ISC",
