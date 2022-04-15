@@ -1,5 +1,7 @@
 content = document.getElementById("content");
 
+
+
 class Menu{
     constructor(){
         this.sections = [];
@@ -74,7 +76,7 @@ class Menu{
                 alert("Order placed!");
             }
         } else {
-            basketItems.innerHTML = "";
+            basketItems.innerText = "";
         }
         // append all food in all sections with quantity to basket
         var price = 0;
@@ -122,13 +124,14 @@ class Food{
            var image = document.createElement("IMG");
            image.setAttribute("src", this.imageSrc);
            image.setAttribute("alt", this.name);
+           image.setAttribute("loading", "lazy")
            image.classList.add("menuItem");
            var caption = document.createElement("figcaption");
-           caption.innerHTML = controls ? this.name : "";
+           caption.innerText = controls ? this.name : "";
            caption.classList.add("caption");
             // add price to caption, with euro sign and two decimal places
             var price = document.createElement("p");
-            price.innerHTML = "€" + this.price.toFixed(2);
+            price.innerText = "€" + this.price.toFixed(2);
             price.classList.add("price");
             caption.appendChild(price);
 
@@ -142,23 +145,23 @@ class Food{
                 var plus = document.createElement("button");
                 var minus = document.createElement("button");
                 plus.setAttribute('name', "plus");
-                plus.innerHTML = "+";
+                plus.innerText = "+";
                 minus.setAttribute('name', "minus");
-                minus.innerHTML = '-';
+                minus.innerText = '-';
 
                 //Click event
                 let name = this.name;
                 var value = document.createElement("span");
-                value.innerHTML = this.selected;
+                value.innerText = this.selected;
                 minus.onclick = () => {
-                    if(this.selected > 0){this.selected--; value.innerHTML = this.selected; menu.generateBasket();}
+                    if(this.selected > 0){this.selected--; value.innerText = this.selected; menu.generateBasket();}
                     // set selected class
                     if (this.selected === 0){
                         result.classList.remove("menu--selected");
                     }
                 }
                 plus.onclick = () => {
-                    this.selected++; value.innerHTML = this.selected; menu.generateBasket();
+                    this.selected++; value.innerText = this.selected; menu.generateBasket();
                     result.classList.add("menu--selected");
                 }
                 
@@ -171,7 +174,7 @@ class Food{
                 result.appendChild(buttons);
             } else {
                 var value = document.createElement("span");
-                value.innerHTML = this.selected;
+                value.innerText = this.selected;
                 result.appendChild(value);
             }
 
@@ -195,7 +198,7 @@ class MenuSection{
         table.id = this.menuType;
 
         var i = 0;
-        const width = 3;
+        const width = 4;
         while(i < this.foods.length){
             var newRow = table.insertRow(-1);
             var iterOld = i;

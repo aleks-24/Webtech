@@ -12,7 +12,7 @@
         </burger>
 
         <burger>
-            <image>resources/Menu-Burgers/B1.jpg</image>
+            <image>resources/Menu-Burgers/B2.jpg</image>
             <vegan>true</vegan>
             <chicken>false</chicken>
             <name>BOURGIR1</name>
@@ -22,7 +22,7 @@
         </burger>
 
         <burger>
-            <image>resources/Menu-Burgers/B1.jpg</image>
+            <image>resources/Menu-Burgers/B3.jpg</image>
             <vegan>true</vegan>
             <chicken>false</chicken>
             <name>BOURGIR1</name>
@@ -32,7 +32,7 @@
         </burger>
 
         <burger>
-            <image>resources/Menu-Burgers/B1.jpg</image>
+            <image>resources/Menu-Burgers/B4.jpg</image>
             <vegan>true</vegan>
             <chicken>false</chicken>
             <name>BOURGIR1</name>
@@ -42,7 +42,7 @@
         </burger>
 
         <burger>
-            <image>resources/Menu-Burgers/B1.jpg</image>
+            <image>resources/Menu-Burgers/B5.jpg</image>
             <vegan>true</vegan>
             <chicken>false</chicken>
             <name>BOURGIR1</name>
@@ -52,7 +52,27 @@
         </burger>
 
         <burger>
-            <image>resources/Menu-Burgers/B1.jpg</image>
+            <image>resources/Menu-Burgers/B6.jpg</image>
+            <vegan>true</vegan>
+            <chicken>false</chicken>
+            <name>BOURGIR1</name>
+            <calories>9001</calories>
+            <spiciness>2</spiciness>
+            <price>420.69</price>
+        </burger>
+
+                <burger>
+            <image>resources/Menu-Burgers/B7.jpeg</image>
+            <vegan>true</vegan>
+            <chicken>false</chicken>
+            <name>BOURGIR1</name>
+            <calories>9001</calories>
+            <spiciness>2</spiciness>
+            <price>420.69</price>
+        </burger>
+
+        <burger>
+            <image>resources/Menu-Burgers/B8.jpg</image>
             <vegan>true</vegan>
             <chicken>false</chicken>
             <name>BOURGIR1</name>
@@ -65,7 +85,7 @@
 
     <chickens>
         <chicken>
-            <image>resources/Menu-Burgers/B1.jpg</image>
+            <image>resources/Menu-Burgers/B9.jpg</image>
             <vegan>true</vegan>
             <boneless>false</boneless>
             <name>SJIKEN</name>
