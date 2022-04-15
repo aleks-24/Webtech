@@ -1,20 +1,20 @@
 $(document).ready(function () {
     $("#registerForm").submit(function (event) {
-        console.log("loging in...")
+        console.log("logging in...")
       var formDataRegister = {
         username: $("#username").val(),
-        firsName: $("#firstName").val(),
-        lastName: $("#lastName").val(),
+        firstname: $("#firstName").val(),
+        lastname: $("#lastName").val(),
         password: $("#password").val(),
-        phoneNumber: $("#phoneNumber").val(),
-        emailAdress: $("#emailAdress").val(),
-        adress: $("#adress").val(),
-        postalCode: $("#postalCode").val(),
+        phonenumber: $("#phoneNumber").val(),
+        email: $("#emailAddress").val(),
+        address: $("#address").val(),
+        postcode: $("#postalCode").val(),
       };
   
       $.ajax({
         type: "POST",
-        url: "/register",
+        url: "/api/user",
         data: formDataRegister,
         dataType: "json",
         encode: true,
@@ -35,7 +35,7 @@ $(document).ready(function () {
     
         $.ajax({
           type: "POST",
-          url: "/login",
+          url: "/api/auth",
           data: formDataLogin,
           dataType: "json",
           encode: true,
