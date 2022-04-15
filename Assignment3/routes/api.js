@@ -34,7 +34,7 @@ router.get('/food', (req, res) => {
             });
             return;
         }
-        
+
         db.get("SELECT Name as name, Spiciness as spiciness, Vegan as vegan, Calories as calories, Price as price FROM Food WHERE FoodID = ?", id, (err, row) => {
             if (err) {
                 console.log(err);
@@ -80,6 +80,11 @@ router.get('/food', (req, res) => {
             food: rows
         });
     })
+});
+
+router.post('/logout', (req, res) => {
+    delete req.session.user;
+    res.status(200).send();
 });
 
 // auth endpoint

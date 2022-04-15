@@ -15,6 +15,19 @@ fetch('api/user', {
         // logged in
         anchor.href = "user.html";
         anchor.innerText = body.user.username;
+
+        {
+            const li = document.createElement("li");
+            const anchor = document.createElement("a");
+            anchor.innerText = "Logout";
+            anchor.href = "#";
+            anchor.addEventListener("click", async () => {
+                await fetch("api/logout", { method: 'POST' });
+                window.location.href = "index.html";
+            });
+            li.appendChild(anchor);
+            navHeader.appendChild(li);
+        }
     }
 });
 
