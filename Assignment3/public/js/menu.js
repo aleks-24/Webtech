@@ -67,7 +67,6 @@ class Menu{
 
                 var xhr = new XMLHttpRequest();
                 var orders = [];
-                console.log(menuSections)
                 for (const section of menuSections){
                     for (const food of section.foods){
                         // ignore food without quantity
@@ -244,7 +243,6 @@ class MenuSection{
         var i = 0;
         const width = 4;
         var logIn = await checkLoggedIn();
-        console.log(logIn);
         while(i < this.foods.length){
             var newRow = this.table.insertRow(-1);
             var iterOld = i;

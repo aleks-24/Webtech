@@ -40,7 +40,7 @@ async function getOrders(){
                 img.setAttribute("loading", "lazy")
                 img.classList.add("menuItem");
                 var paragraph = document.createElement("H3");
-                paragraph.innerText = product.quantity;
+                paragraph.innerText = "Amount: " + product.quantity;
                 paragraph.style = "position: relative; left : 30px";
                 section.appendChild(img);
                 section.appendChild(paragraph);
