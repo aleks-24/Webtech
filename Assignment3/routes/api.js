@@ -16,7 +16,7 @@ function dball(sql, params) {
     return new Promise((res, rej) => {
         db.all(sql, params, (e, rows) => {
             if (e) rej(e);
-            res(rows);
+            else res(rows);
         });
     });
 }
@@ -25,6 +25,43 @@ function dball(sql, params) {
 const bcrypt = require('bcrypt');
 
 router.get('/food', (req, res) => {
+    if (req.query.id) {
+        const id = parseInt(req.query.id);
+        if (isNaN(id)) {
+            res.status(400).json({
+                success: false,
+                message: "Invalid food id"
+            });
+            return;
+        }
+        
+        db.get("SELECT Name as name, Spiciness as spiciness, Vegan as vegan, Calories as calories, Price as price FROM Food WHERE FoodID = ?", id, (err, row) => {
+            if (err) {
+                console.log(err);
+                res.status(500).json({
+                    success: false,
+                    message: "Internal server error"
+                });
+                return;
+            }
+            if (!row) {
+                res.status(400).json({
+                    success: false,
+                    message: "Invalid food id"
+                });
+                return;
+            }
+
+            row.vegan = row.vegan == "true";
+
+            res.status(200).json({
+                success: true,
+                food: row
+            });
+        });
+        return;
+    }
+    
     const type = req.query.type;
     db.all("SELECT FoodID as id, Name as name, Spiciness as spiciness, Vegan as vegan, Calories as calories, Price as price FROM Food WHERE Type = ?", type, (err, rows) => {
         if (err) {
@@ -252,7 +289,44 @@ router.post('/user', (req, res) => {
 });
 
 //register order
-router.post('/user/orders', (req, res) => {
+router.get('/user/currentorder', (req, res) => {
+    // check if the user is logged in
+    if (!req.session.user) {
+        res.status(400).json({
+            success: false,
+            message: "Not logged in"
+        });
+        return;
+    }
+
+    // get the orders
+    db.get('SELECT OrderID as id, Status as status, Timestamp as timestamp FROM Orders WHERE UserID = ? AND Status = "Unfinished"', req.session.user, async (err, row) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({
+                success: false,
+                message: "Internal server error"
+            });
+            return;
+        } else if (!row) {
+            res.status(200).json({
+                success: true,
+                order: []
+            });
+            return;
+        }
+
+        // get order products
+        const products = await dball("SELECT FoodID as id, Quantity as quantity FROM OrderProduct WHERE OrderID = ?", row.id);
+
+        res.status(200).json({
+            success: true,
+            order: products
+        });
+    });
+});
+
+router.post('/user/currentorder', (req, res) => {
     // check if the user is logged in
     if (!req.session.user) {
         res.status(400).json({
@@ -265,30 +339,88 @@ router.post('/user/orders', (req, res) => {
     const userId = req.session.user;
     const order = req.body.order;
 
-    db.run("INSERT INTO Orders (UserId, Status, Timestamp) VALUES (?,?,?)", [userId, 'Processing', Date.now()], function (err) {
+    db.get('SELECT OrderID as id FROM Orders WHERE UserID = ? AND Status = "Unfinished"', userId, async (err, row) => {
         if (err) {
             console.log(err);
             res.status(500).json({
                 success: false,
-                message: 'Error registering order'
+                message: 'Internal server error'
+            });
+            return;
+        }
+
+        let orderId;
+        
+        if (!row) {
+            orderId = await new Promise((res, rej) => {
+                db.run("INSERT INTO Orders (UserId, Status, Timestamp) VALUES (?,?,?)", [userId, 'Unfinished', Date.now()], function (err) {
+                    if (err) rej(err);
+                    else res(this.lastID);
+                });
             });
         } else {
-            const orderID = this.lastID;
-            res.status(200).json({
-                success: true,
-                message: 'Success adding order'
+            orderId = row.id;
 
-            })
-            var stmnt = db.prepare('INSERT INTO OrderProduct VALUES (?,?,?)');
-            order.forEach(item => {
-                var foodId = item.id;
-                var quantity = item.quantity;
-                stmnt.run(foodId, orderID, quantity);
-            })
-            stmnt.finalize();
+            await new Promise((res, rej) => {
+                db.run("DELETE FROM OrderProduct WHERE OrderId = ?", orderId, function (err) {
+                    if (err) rej(err);
+                    else res();
+                });
+            });
         }
+
+        var stmnt = db.prepare('INSERT INTO OrderProduct VALUES (?,?,?)');
+        order.forEach(item => {
+            var foodId = item.id;
+            var quantity = item.quantity;
+            stmnt.run(foodId, orderId, quantity);
+        })
+        stmnt.finalize();
+
+        res.status(200).json({
+            success: true,
+            message: 'Success setting current order'
+        });
+    });
+});
+
+router.post('/user/orders', (req, res) => {
+    // check if the user is logged in
+    if (!req.session.user) {
+        res.status(400).json({
+            success: false,
+            message: "Not logged in"
+        });
+        return;
     }
-    );
+
+    const userId = req.session.user;
+
+    db.get('SELECT OrderID as id FROM Orders WHERE UserID = ? AND Status = "Unfinished"', userId, async (err, row) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({
+                success: false,
+                message: 'Internal server error'
+            });
+            return;
+        }
+        if (!row) {
+            console.log(err);
+            res.status(400).json({
+                success: false,
+                message: 'No current order'
+            });
+            return;
+        }
+
+        db.run('UPDATE Orders SET Status = "Processing", Timestamp = ? WHERE OrderID = ?', [Date.now(), row.id]);
+
+        res.status(200).json({
+            success: true,
+            message: 'Success adding order'
+        });
+    });
 });
 
 // get list of orders

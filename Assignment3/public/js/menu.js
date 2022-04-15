@@ -8,11 +8,30 @@ async function checkLoggedIn(){
     return body.success
 }
 
+const foods = {};
+
+async function getFood(id, data) {
+    if (foods[id]) return foods[id];
+
+    if (data) {
+        foods[id] = new Food("resources/Food/" + id + ".jpg", data.name, data.price, data.spiciness, data.calories, data.vegan, id);
+        return foods[id];
+    }
+
+    const res = await fetch('api/food?id=' + id, { method: 'GET' });
+    const json = await res.json();
+
+    if (json.success) {
+        foods[id] = new Food("resources/Food/" + id + ".jpg", json.food.name, json.food.price, json.food.spiciness, json.food.calories, json.food.vegan, id);
+    } else return undefined;
+
+    return foods[id];
+}
+
 class Menu{
     constructor(){
         this.sections = [];
     }
-
 
     generateNav(){ //generate nav menu
         var header = document.createElement("H1");
@@ -20,7 +39,7 @@ class Menu{
         content.appendChild(header);
     }
 
-    generateBasket(){ //Generate basket
+    generateBasket(submit = false){ //Generate basket
         // search for existing basket
         var basket = document.getElementById("basket");
         var basketItems = document.getElementById("basket--items");
@@ -62,44 +81,45 @@ class Menu{
             var orderButton = document.createElement("button");
             orderButton.textContent = "Order";
             basket.appendChild(orderButton);
-            var menuSections = this.sections;
             orderButton.onclick = function(){
-
-                var xhr = new XMLHttpRequest();
-                var orders = [];
-                console.log(menuSections)
-                for (const section of menuSections){
-                    for (const food of section.foods){
-                        // ignore food without quantity
-                        if (food.selected){
-                            orders.push({id: food.id, quantity: food.selected});
-                        }
-                    }
-                }        
+                // TODO: convert to fetch
+                var xhr = new XMLHttpRequest()
                 xhr.open("POST", "api/user/orders", true);
-                xhr.setRequestHeader('Content-Type', 'application/json');
-                xhr.send(JSON.stringify({
-                    order : orders
-                 }));
-                xhr.onload = function () {
-                    var data = this.responseText;
-                }
-                alert("Order placed!");
+                xhr.send();
+                window.location.href = 'user.html';
             }
         } else {
             basketItems.innerText = "";
         }
         // append all food in all sections with quantity to basket
         var price = 0;
-        for (const section of this.sections){
-            for (const food of section.foods){
-                // ignore food without quantity
-                if (food.selected){
-                    price += food.price * food.selected;
-                    basketItems.appendChild(food.generateStuff(false));
-                }
+        for (const food of Object.values(foods)){
+            // ignore food without quantity
+            if (food.selected){
+                price += food.price * food.selected;
+                basketItems.appendChild(food.generateStuff(false));
             }
         }
+
+        // send basket to server
+        var orders = [];
+        for (const food of Object.values(foods)){
+            // ignore food without quantity
+            if (food.selected){
+                orders.push({id: food.id, quantity: food.selected});
+            }
+        }  
+
+        // TODO: convert to fetch
+        if (submit) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/user/currentorder", true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify({
+                order : orders
+            }));
+        }
+
         if (basketItems.childElementCount === 0){
             // hide basket
             basket.style.display = "none";
@@ -120,7 +140,7 @@ class Menu{
 }
 
 class Food{
-    constructor(imageSrc="", name="", price=420.69, spiciness = -1, calories = 0, vegan = false){
+    constructor(imageSrc="", name="", price=420.69, spiciness = -1, calories = 0, vegan = false, id){
         this.name = name;
         this.price = price;
         this.spiciness = spiciness;
@@ -128,7 +148,7 @@ class Food{
         this.vegan = vegan;
         this.imageSrc = imageSrc;
         this.selected = 0;
-        this.id = 69;
+        this.id = id;
        }
 
        generateStuff(controls=true, logIn = false){
@@ -154,6 +174,8 @@ class Food{
 
             //Creating plus and minus button
             if (controls && logIn){
+                if (this.selected > 0) result.classList.add("menu--selected");
+
                 var plus = document.createElement("button");
                 var minus = document.createElement("button");
                 plus.setAttribute('name', "plus");
@@ -166,14 +188,14 @@ class Food{
                 var value = document.createElement("span");
                 value.innerText = this.selected;
                 minus.onclick = () => {
-                    if(this.selected > 0){this.selected--; value.innerText = this.selected; menu.generateBasket();}
+                    if(this.selected > 0){this.selected--; value.innerText = this.selected; menu.generateBasket(true);}
                     // set selected class
                     if (this.selected === 0){
                         result.classList.remove("menu--selected");
                     }
                 }
                 plus.onclick = () => {
-                    this.selected++; value.innerText = this.selected; menu.generateBasket();
+                    this.selected++; value.innerText = this.selected; menu.generateBasket(true);
                     result.classList.add("menu--selected");
                 }
                 
@@ -184,7 +206,7 @@ class Food{
                 buttons.appendChild(value);
                 buttons.appendChild(plus);
                 result.appendChild(buttons);
-            } else if(logIn) {
+            } else {
                 var value = document.createElement("span");
                 value.innerText = this.selected;
                 result.appendChild(value);
@@ -218,7 +240,7 @@ class MenuSection{
                 const json = await res.json();
 
                 if (json.success) {
-                    this.foods = json.food.map(data => new Food("resources/Food/" + data.id + ".jpg", data.name, data.price, data.spiciness, data.calories, data.vegan));
+                    this.foods = await Promise.all(json.food.map(async data => await getFood(data.id, data)));
                     this.generateItems();
                 }
             } else {
@@ -266,6 +288,22 @@ drinkSection = new MenuSection("Drink");
 menu = new Menu();
 menu.sections = [burgerSection, chickenSection, drinkSection];
 
-menu.generateBasket();
+menu.generateBasket(false);
 menu.generateNav();
 menu.generateSections();
+
+async function getCurrentOrder() {
+    const res = await fetch('api/user/currentorder');
+    const json = await res.json();
+
+    if (json.success) {
+        for (const v of json.order) {
+            const food = await getFood(v.id);
+            food.selected = v.quantity;
+        }
+
+        menu.generateBasket(false);
+    }
+}
+
+getCurrentOrder();
