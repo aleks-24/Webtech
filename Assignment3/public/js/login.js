@@ -1,4 +1,5 @@
-async function login() {
+async function login(e) {
+    e.preventDefault();
     document.getElementById("loginError").innerText = "";
     
     const data = {};
@@ -21,7 +22,8 @@ async function login() {
     }
 }
 
-async function register() {
+async function register(e) {
+    e.preventDefault();
     document.getElementById("registerError").innerText = "";
 
     const data = {};

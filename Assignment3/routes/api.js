@@ -126,11 +126,11 @@ router.post('/user', (req, res) => {
     const phonenumber = req.body.phonenumber;
     const postcode = req.body.postcode;
 
-    // check password is at least 4 characters long
+    // check password is at least 3 characters long
     if (!password || password.length < 3) {
         res.status(400).json({
             success: false,
-            message: 'Password must be at least 4 characters long'
+            message: 'Password must be at least 3 characters long'
         });
         return;
     }
