@@ -110,7 +110,6 @@ class Menu{
             }
         }  
 
-        // TODO: convert to fetch
         if (submit) {
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "api/user/currentorder", true);
@@ -206,7 +205,7 @@ class Food{
                 buttons.appendChild(value);
                 buttons.appendChild(plus);
                 result.appendChild(buttons);
-            } else {
+            } else if (!controls) {
                 var value = document.createElement("span");
                 value.innerText = this.selected;
                 result.appendChild(value);
