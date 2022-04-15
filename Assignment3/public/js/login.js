@@ -6,7 +6,7 @@ async function login(e) {
     data.username = document.getElementById("loginUsername").value;
     data.password = document.getElementById("loginPassword").value;
 
-    const ret = await fetch('/api/auth', {
+    const ret = await fetch('api/auth', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ async function register(e) {
     data.phonenumber = document.getElementById("phoneNumber").value;
     data.postcode = document.getElementById("postalCode").value;
 
-    const ret = await fetch('/api/user', {
+    const ret = await fetch('api/user', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
