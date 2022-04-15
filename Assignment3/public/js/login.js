@@ -22,8 +22,8 @@ async function register() {
     data.password = document.getElementById("password").value;
     data.firstname = document.getElementById("firstName").value;
     data.lastname = document.getElementById("lastName").value;
-    data.email = document.getElementById("emailAdress").value;
-    data.address = document.getElementById("adress").value;
+    data.email = document.getElementById("emailAddress").value;
+    data.address = document.getElementById("address").value;
     data.phonenumber = document.getElementById("phoneNumber").value;
     data.postcode = document.getElementById("postalCode").value;
 
