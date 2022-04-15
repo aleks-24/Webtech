@@ -15,26 +15,9 @@ class Menu{
 
 
     generateNav(){ //generate nav menu
-        var list = document.createElement("UL");
-        for (const section of this.sections){
-            
-            var element = document.createElement("LI");
-            var link = document.createElement("A");
-            
-            link.setAttribute("href", "#" + section.menuType);
-            link.setAttribute("class", "menuLink");
-            link.textContent = section.menuType;
-            element.appendChild(link);
-            list.appendChild(element);
-        }
-        var nav = document.createElement("NAV");
-
         var header = document.createElement("H1");
         header.textContent = "Menu";
-
-        nav.appendChild(header);
-        nav.appendChild(list);
-        content.appendChild(nav);
+        content.appendChild(header);
     }
 
     generateBasket(){ //Generate basket
@@ -131,7 +114,7 @@ class Menu{
 
     generateSections(){ //Generate HTML for each section
         this.sections.forEach(section => {
-            section.generateItems();            
+            section.generateHtml();            
         });
     }
 }
@@ -217,21 +200,53 @@ class MenuSection{
         this.foods = [];
     }
 
-    async generateItems(){ //Generate HTML for each item in this section
+    generateHtml(){
         //Making a table
         var section = document.createElement("section");
+        var button = document.createElement("button");
+        button.classList.add("menu--collapsable");
+        button.classList.add("menu--collapsed");
+        button.addEventListener("click", async () => {
+            if (button.classList.contains("menu--collapsed")) {
+                button.classList.remove("menu--collapsed");
+                button.classList.add("menu--expanded");
+                this.table.style.display = "table";
+                
+                if (this.table.rows.length) return;
+
+                const res = await fetch('api/food?type=' + this.menuType, { method: 'GET' });
+                const json = await res.json();
+
+                if (json.success) {
+                    this.foods = json.food.map(data => new Food("resources/Menu-Burgers/B1.jpg", data.name, data.price, data.spiciness, data.calories, data.vegan));
+                    this.generateItems();
+                }
+            } else {
+                button.classList.add("menu--collapsed");
+                button.classList.remove("menu--expanded");
+                this.table.style.display = "none";
+            }
+        });
         var h2 = document.createElement("h2");
         h2.textContent = this.menuType;
 
-        var table = document.createElement("table");
-        table.id = this.menuType;
+        this.table = document.createElement("table");
+        this.table.id = this.menuType;
+        this.table.style.display = "none";
+        
+        button.appendChild(h2);
+        section.appendChild(button);
+        section.appendChild(this.table);
+        content.appendChild(section);
+    }
 
+    async generateItems(){ //Generate HTML for each item in this section
         var i = 0;
         const width = 4;
         var logIn = await checkLoggedIn();
         console.log(logIn);
         while(i < this.foods.length){
-            var newRow = table.insertRow(-1);
+            var newRow = this.table.insertRow(-1);
             var iterOld = i;
             while(i < (iterOld + width) && i < this.foods.length){
                 var food = this.foods[i];
@@ -241,13 +256,10 @@ class MenuSection{
                 i++;
             }
         }
-        
-        section.appendChild(h2);
-        section.appendChild(table);
-        content.appendChild(section);
     }
 }
 
+/*
 class Burger extends Food{
     constructor(chicken = false, ...params){
         super(...params);
@@ -268,77 +280,18 @@ class Drinks extends Food{
         this.carbonated = carbonated;
     }
 }
+*/
 
-burgerSection = new MenuSection("Burgers"); //bourgir
+burgerSection = new MenuSection("Burger"); //bourgir
 chickenSection = new MenuSection("Chicken"); //mmm sjiken
-drinkSection = new MenuSection("Drinks");
+drinkSection = new MenuSection("Drink");
 
 menu = new Menu();
 menu.sections = [burgerSection, chickenSection, drinkSection];
 
-
-
-function loadDoc(){
-    const xhttp = new XMLHttpRequest();
-    xhttp.onload = function(){processXML(this)}
-    xhttp.open("GET", "xml/menu.xml")
-    xhttp.send()
-}
-
-
-function processXML(xml){
-    const xmlDoc = xml.responseXML;
-    const burgers = xmlDoc.getElementsByTagName("burgers")[0].getElementsByTagName("burger");
-    for (let i = 0; i < burgers.length; i++){
-        burger = burgers[i]
-        const chicken = burger.getElementsByTagName("chicken")[0].childNodes[0].nodeValue === "true";
-        const img = burger.getElementsByTagName("image")[0].childNodes[0].nodeValue;
-        const name = burger.getElementsByTagName("name")[0].childNodes[0].nodeValue;
-        const price = parseFloat(burger.getElementsByTagName("price")[0].childNodes[0].nodeValue);
-        const spiciness = burger.getElementsByTagName("spiciness")[0].childNodes[0].nodeValue;
-        const calories = burger.getElementsByTagName("calories")[0].childNodes[0].nodeValue;
-        const vegan = burger.getElementsByTagName("vegan")[0].childNodes[0].nodeValue === "true";
-        burgerSection.foods.push(new Burger(chicken, img, name, price, spiciness, calories, vegan));
-    }
-
-    const chickens = xmlDoc.getElementsByTagName("chickens")[0].getElementsByTagName("chicken");
-    for (let i = 0; i < chickens.length; i++){
-        chicken = chickens[i]
-        console.log(chicken)
-        console.log(chicken.getElementsByTagName("boneless")[0])
-        const boneless = chicken.getElementsByTagName("boneless")[0].childNodes[0].nodeValue === "true";
-        const img = chicken.getElementsByTagName("image")[0].childNodes[0].nodeValue;
-        const name = chicken.getElementsByTagName("name")[0].childNodes[0].nodeValue;
-        const price = parseFloat(chicken.getElementsByTagName("price")[0].childNodes[0].nodeValue);
-        const spiciness = chicken.getElementsByTagName("spiciness")[0].childNodes[0].nodeValue;
-        const calories = chicken.getElementsByTagName("calories")[0].childNodes[0].nodeValue;
-        const vegan = chicken.getElementsByTagName("vegan")[0].childNodes[0].nodeValue === "true";
-        chickenSection.foods.push(new Chicken(boneless, img, name, price, spiciness, calories, vegan));
-    }
-
-    const drinks = xmlDoc.getElementsByTagName("drinks")[0].getElementsByTagName("drink");
-    for (let i = 0; i < drinks.length; i++){
-        drink = drinks[i]
-        const carbonated = drink.getElementsByTagName("carbonated")[0].childNodes[0].nodeValue === "true";
-        const img = drink.getElementsByTagName("image")[0].childNodes[0].nodeValue;
-        const name = drink.getElementsByTagName("name")[0].childNodes[0].nodeValue;
-        const price = parseFloat(drink.getElementsByTagName("price")[0].childNodes[0].nodeValue);
-        const spiciness = drink.getElementsByTagName("spiciness")[0].childNodes[0].nodeValue;
-        const calories = drink.getElementsByTagName("calories")[0].childNodes[0].nodeValue;
-        const vegan = drink.getElementsByTagName("vegan")[0].childNodes[0].nodeValue === "true";
-        drinkSection.foods.push(new Drinks(carbonated, img, name, price, spiciness, calories, vegan));
-    }
-
-
-
-    menu.generateBasket();
-    menu.generateNav();
-    menu.generateSections();
-}
-loadDoc()
-
-
-
+menu.generateBasket();
+menu.generateNav();
+menu.generateSections();
 
 //push the food and drink items to their respective arrays
 // burgerSection.foods.push(new Burger(false, "resources/Menu-Burgers/B1.jpg", "Basic Burger", 4.50, 2, 480, false)); 

@@ -24,6 +24,27 @@ function dball(sql, params) {
 // import bcrypt
 const bcrypt = require('bcrypt');
 
+router.get('/food', (req, res) => {
+    const type = req.query.type;
+    db.all("SELECT FoodID as id, Name as name, Spiciness as spiciness, Vegan as vegan, Calories as calories, Price as price FROM Food WHERE Type = ?", type, (err, rows) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({
+                success: false,
+                message: "Internal server error"
+            });
+            return;
+        }
+
+        rows.forEach(v => v.vegan = v.vegan == "true");
+
+        res.status(200).json({
+            success: true,
+            food: rows
+        });
+    })
+});
+
 // auth endpoint
 router.post('/auth', (req, res) => {
     // get the username and password from the request
