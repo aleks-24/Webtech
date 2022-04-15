@@ -3,7 +3,7 @@ const header = document.getElementById("header--navigation");
 const li = document.createElement("li");
 const anchor = document.createElement("a");
 
-fetch('/api/user', {
+fetch('api/user', {
     method: 'GET'
 }).then(async (ret) => {
     const body = await ret.json();
