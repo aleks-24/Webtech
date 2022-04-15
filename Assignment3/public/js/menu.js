@@ -73,6 +73,7 @@ class Menu{
             orderButton.textContent = "Order";
             basket.appendChild(orderButton);
             orderButton.onclick = function(){
+                
                 alert("Order placed!");
             }
         } else {
