@@ -292,7 +292,7 @@ router.get('/user/orders', async (req, res) => {
     }
 
     // get the orders
-    db.all("SELECT OrderID as id FROM Orders WHERE UserID = ?", req.session.user, (err, rows) => {
+    db.all("SELECT OrderID as id, Status as status, Timestamp as timestamp FROM Orders WHERE UserID = ?", req.session.user, async (err, rows) => {
         if (err) {
             console.log(err);
             res.status(500).json({
