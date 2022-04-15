@@ -7,6 +7,7 @@ class Menu{
         this.sections = [];
     }
 
+
     generateNav(){ //generate nav menu
         var list = document.createElement("UL");
         for (const section of this.sections){
@@ -72,9 +73,31 @@ class Menu{
             var orderButton = document.createElement("button");
             orderButton.textContent = "Order";
             basket.appendChild(orderButton);
+            var menuSections = this.sections;
             orderButton.onclick = function(){
-                
+
                 alert("Order placed!");
+                console.log("ordered!");
+                var xhr = new XMLHttpRequest();
+                var orders = [];
+                for (const section of menuSections){
+                    for (const food of section.foods){
+                        // ignore food without quantity
+                        if (food.selected){
+                            orders[food.id] = food.selected;
+                        }
+                    }
+                }
+        
+                xhr.open("POST", "/user/orders", true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.send(JSON.stringify({
+                    order : orders
+                 }));
+                xhr.onload = function () {
+                    var data = this.responseText;
+                    console.log(data);
+                }
             }
         } else {
             basketItems.innerText = "";
