@@ -1,5 +1,8 @@
 /Assignment3/node_modules
 
+
+.db
+
 # Logs
 logs
 *.log
