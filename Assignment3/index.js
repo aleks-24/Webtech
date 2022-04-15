@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const morgan = require('morgan');
 
 const port = 8004;
 
@@ -11,6 +12,8 @@ app.use(session({
 	resave: true,
 	saveUninitialized: true
 }));
+
+app.use(morgan('combined'));
 
 // parse incoming requests
 app.use(bodyParser.urlencoded({ extended: false }));
