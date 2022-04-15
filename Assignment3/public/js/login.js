@@ -16,7 +16,7 @@ async function login(e) {
 
     const body = await ret.json();
     if (body.success) {
-        window.location.href = "/index.html";
+        window.location.href = "index.html";
     } else {
         document.getElementById("loginError").innerText = body.message;
     }
@@ -46,7 +46,7 @@ async function register(e) {
 
     const body = await ret.json();
     if (body.success) {
-        window.location.href = "/index.html";
+        window.location.href = "index.html";
     } else {
         document.getElementById("registerError").innerText = body.message;
     }
