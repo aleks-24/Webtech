@@ -1,6 +1,22 @@
 content = document.getElementById("content");
+checkLoggedIn();
 
-
+function checkLoggedIn(){
+    let loggedIn = false;
+    fetch('api/user',{
+        method: 'GET'
+    }).then(async (ret) => {
+        const body = await ret.json();
+        if(!body.success){
+            loggedIn = false;
+        }
+        else{
+            loggedIn = true;
+        }
+        console.log(loggedIn)
+    });
+    return loggedIn;
+}
 
 class Menu{
     constructor(){
@@ -142,7 +158,7 @@ class Food{
         this.id = 69;
        }
 
-       generateStuff(controls=true){
+       generateStuff(controls=true, logIn = false){
            //do HTML DOM stuff
            var image = document.createElement("IMG");
            image.setAttribute("src", this.imageSrc);
@@ -164,7 +180,7 @@ class Food{
             result.appendChild(caption);
 
             //Creating plus and minus button
-            if (controls){
+            if (controls && logIn){
                 var plus = document.createElement("button");
                 var minus = document.createElement("button");
                 plus.setAttribute('name', "plus");
@@ -195,7 +211,7 @@ class Food{
                 buttons.appendChild(value);
                 buttons.appendChild(plus);
                 result.appendChild(buttons);
-            } else {
+            } else if(logIn) {
                 var value = document.createElement("span");
                 value.innerText = this.selected;
                 result.appendChild(value);
@@ -222,12 +238,14 @@ class MenuSection{
 
         var i = 0;
         const width = 4;
+        var logIn = checkLoggedIn();
+        console.log(logIn);
         while(i < this.foods.length){
             var newRow = table.insertRow(-1);
             var iterOld = i;
             while(i < (iterOld + width) && i < this.foods.length){
                 var food = this.foods[i];
-                var foodCell = food.generateStuff();
+                var foodCell = food.generateStuff(true, logIn);
                 var cell = newRow.insertCell(-1);
                 cell.appendChild(foodCell);
                 i++;
