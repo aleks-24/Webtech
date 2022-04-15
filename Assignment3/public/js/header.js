@@ -14,7 +14,7 @@ fetch('api/user', {
     } else {
         // logged in
         anchor.href = "user.html";
-        anchor.innerText = body.user.username;
+        anchor.innerText = "Orders";
 
         {
             const li = document.createElement("li");

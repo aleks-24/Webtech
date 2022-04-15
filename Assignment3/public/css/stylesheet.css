@@ -183,10 +183,10 @@ footer {
 
 }
 
-@media screen and (max-width: 720px) {
+@media screen and (max-width: 900px) {
 
     .background {
-        height: 18em;
+        height: 21em;
     }
 
     .index {
