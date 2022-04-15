@@ -33,6 +33,7 @@ async function getOrders(){
             header.innerText = "Order " + order.id + ":";
             section.appendChild(header);
             for(const product of order.products){
+                var img = document.createElement("IMG");
                 var paragraph = document.createElement("P");
                 paragraph.innerText = product.id + ": " + product.quantity;
                 section.appendChild(paragraph);
