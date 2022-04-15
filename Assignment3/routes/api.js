@@ -7,13 +7,19 @@ This file is the API for the application, it is used to get the data from the da
 // create express router for api
 const express = require('express');
 const router = express.Router();
-const util = require('util');
 
 // sqlite database
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('DFC.db');
 
-const dball = util.promisify(db.all);
+function dball(sql, params) {
+    return new Promise((res, rej) => {
+        db.all(sql, params, (e, rows) => {
+            if (e) rej(e);
+            res(rows);
+        });
+    });
+}
 
 // import bcrypt
 const bcrypt = require('bcrypt');
@@ -108,7 +114,7 @@ router.get('/user', (req, res) => {
     });
 });
 
-// register user on post to /users page
+// register user on post to /user page
 router.post('/user', (req, res) => {
     // get details from request body
     const username = req.body.username;
@@ -224,30 +230,18 @@ router.post('/user', (req, res) => {
 });
 
 //register order
-router.post('/order', (req, res) => {
-    const userId = req.userID;
-    const order = req.order;
-    var orderID;
+router.post('/user/orders', (req, res) => {
+    // check if the user is logged in
+    if (!req.session.user) {
+        res.status(400).json({
+            success: false,
+            message: "Not logged in"
+        });
+        return;
+    }
 
-    //get previous orderID
-    db.get("SELECT seq FROM sql_sequence WHERE name = Orders", (err, row) => {
-        if (err) {
-            console.log(err);
-            res.status(500).json({
-                success: false,
-                message: "Internal server error"
-            });
-        } else if (row) {
-            orderID = row.orderID + 1;
-        }
-        else {
-            // if the previous order doesn't exist, send an error
-            res.status(500).json({
-                success: false,
-                message: "Internal server error"
-            });
-        }
-    });
+    const userId = req.session.user;
+    const order = req.body.order;
 
     db.run("INSERT INTO Orders (UserId, Status, Timestamp) VALUES (?,?,?)", [userId, 'Processing', Date.now()], function (err) {
         if (err) {
@@ -257,6 +251,7 @@ router.post('/order', (req, res) => {
                 message: 'Error registering order'
             });
         } else {
+            const orderID = this.lastID;
             res.status(200).json({
                 success: true,
                 message: 'Success adding order'
@@ -264,8 +259,8 @@ router.post('/order', (req, res) => {
             })
             var stmnt = db.prepare('INSERT INTO OrderProduct VALUES (?,?,?)');
             order.forEach(item => {
-                var foodId = item.FoodID;
-                var quantity = item.Quantity;
+                var foodId = item.id;
+                var quantity = item.quantity;
                 stmnt.run(foodId, orderID, quantity);
             })
             stmnt.finalize();
@@ -274,14 +269,8 @@ router.post('/order', (req, res) => {
     );
 });
 
-// get user details on get to /users/:id page
-router.get('/users/:uid', (req, res) => {
-    const uid = req.params.uid;
-    res.send(`User id: ${uid}`);
-});
-
 // get list of orders
-router.get('/user/orders', async (req, res) => {
+router.get('/user/orders', (req, res) => {
     // check if the user is logged in
     if (!req.session.user) {
         res.status(400).json({
@@ -292,7 +281,7 @@ router.get('/user/orders', async (req, res) => {
     }
 
     // get the orders
-    db.all("SELECT OrderID as id, Status as status, Timestamp as timestamp FROM Orders WHERE UserID = ?", req.session.user, async (err, rows) => {
+    db.all("SELECT OrderID as id FROM Orders WHERE UserID = ?", req.session.user, async (err, rows) => {
         if (err) {
             console.log(err);
             res.status(500).json({
@@ -310,7 +299,7 @@ router.get('/user/orders', async (req, res) => {
 
         // get order products
         for (let i = 0; i < rows.length; i++) {
-            const products = dball("SELECT FoodID as id, Quantity as quantity FROM OrderProduct WHERE OrderID = ?", rows[i].id);
+            const products = await dball("SELECT FoodID as id, Quantity as quantity FROM OrderProduct WHERE OrderID = ?", rows[i].id);
 
             if (!products) {
                 res.status(500).json({
