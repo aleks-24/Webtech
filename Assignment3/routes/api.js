@@ -219,6 +219,7 @@ router.post('/user', (req, res) => {
                         message: 'Error registering user'
                     });
                 } else {
+                    req.session.user = this.lastID;
                     res.status(200).json({
                         success: true,
                         message: 'User registered'
