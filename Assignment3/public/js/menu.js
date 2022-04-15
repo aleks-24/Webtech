@@ -1,3 +1,4 @@
+//this file generates the menu through DOM
 content = document.getElementById("content");
 
 async function checkLoggedIn(){
