@@ -1,4 +1,4 @@
-const header = document.getElementById("header--navigation");
+const navHeader = document.getElementById("header--navigation");
 
 const li = document.createElement("li");
 const anchor = document.createElement("a");
@@ -19,4 +19,4 @@ fetch('api/user', {
 });
 
 li.appendChild(anchor);
-header.appendChild(li);
+navHeader.appendChild(li);

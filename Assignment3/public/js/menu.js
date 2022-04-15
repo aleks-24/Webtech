@@ -218,7 +218,7 @@ class MenuSection{
                 const json = await res.json();
 
                 if (json.success) {
-                    this.foods = json.food.map(data => new Food("resources/Menu-Burgers/B1.jpg", data.name, data.price, data.spiciness, data.calories, data.vegan));
+                    this.foods = json.food.map(data => new Food("resources/Food/" + data.id + ".jpg", data.name, data.price, data.spiciness, data.calories, data.vegan));
                     this.generateItems();
                 }
             } else {
