@@ -8,7 +8,6 @@ async function getUser(){
     const body = await ret.json();
     user = body.user;
     var a = document.getElementsByTagName("article")[0];
-    console.log(user)
     for( const [key, value] of Object.entries(user)){
         var paragraph = document.createElement("P");
         paragraph.innerText = capitalize(key) + ": " + value;
@@ -28,14 +27,17 @@ async function getOrders(){
     //print orders
     for(const order of orders){
         if (order.products.length != 0){
+            var section = document.createElement("SECTION");
+            section.style.borderStyle = "dashed";
             var header = document.createElement("H2");
             header.innerText = "Order " + order.id + ":";
-            a.appendChild(header);
+            section.appendChild(header);
             for(const product of order.products){
                 var paragraph = document.createElement("P");
                 paragraph.innerText = product.id + ": " + product.quantity;
-                a.appendChild(paragraph);
+                section.appendChild(paragraph);
             }
+            a.appendChild(section);
         }
     }
 }
