@@ -76,28 +76,26 @@ class Menu{
             var menuSections = this.sections;
             orderButton.onclick = function(){
 
-                alert("Order placed!");
-                console.log("ordered!");
                 var xhr = new XMLHttpRequest();
                 var orders = [];
+                console.log(menuSections)
                 for (const section of menuSections){
                     for (const food of section.foods){
                         // ignore food without quantity
                         if (food.selected){
-                            orders[food.id] = food.selected;
+                            orders.push({id: food.id, quantity: food.selected});
                         }
                     }
-                }
-        
-                xhr.open("POST", "/user/orders", true);
+                }        
+                xhr.open("POST", "/api/user/orders", true);
                 xhr.setRequestHeader('Content-Type', 'application/json');
                 xhr.send(JSON.stringify({
                     order : orders
                  }));
                 xhr.onload = function () {
                     var data = this.responseText;
-                    console.log(data);
                 }
+                alert("Order placed!");
             }
         } else {
             basketItems.innerText = "";
@@ -141,6 +139,7 @@ class Food{
         this.vegan = vegan;
         this.imageSrc = imageSrc;
         this.selected = 0;
+        this.id = 69;
        }
 
        generateStuff(controls=true){

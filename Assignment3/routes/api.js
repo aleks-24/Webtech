@@ -243,6 +243,7 @@ router.post('/user/orders', (req, res) => {
 
     const userId = req.session.user;
     const order = req.body.order;
+    console.log(req);
 
     db.run("INSERT INTO Orders (UserId, Status, Timestamp) VALUES (?,?,?)", [userId, 'Processing', Date.now()], function (err) {
         if (err) {
