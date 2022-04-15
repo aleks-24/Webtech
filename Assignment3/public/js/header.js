@@ -7,7 +7,6 @@ fetch('/api/user', {
     method: 'GET'
 }).then(async (ret) => {
     const body = await ret.json();
-    console.log(body);
     if (!body.success) {
         // not logged in
         anchor.href = "/login.html";
