@@ -1,21 +1,11 @@
 content = document.getElementById("content");
-checkLoggedIn();
 
-function checkLoggedIn(){
-    let loggedIn = false;
-    fetch('api/user',{
+async function checkLoggedIn(){
+    const ret = await fetch('api/user',{
         method: 'GET'
-    }).then(async (ret) => {
-        const body = await ret.json();
-        if(!body.success){
-            loggedIn = false;
-        }
-        else{
-            loggedIn = true;
-        }
-        console.log(loggedIn)
     });
-    return loggedIn;
+    const body = await ret.json();
+    return body.success
 }
 
 class Menu{
@@ -103,7 +93,7 @@ class Menu{
                         }
                     }
                 }        
-                xhr.open("POST", "/api/user/orders", true);
+                xhr.open("POST", "api/user/orders", true);
                 xhr.setRequestHeader('Content-Type', 'application/json');
                 xhr.send(JSON.stringify({
                     order : orders
@@ -227,7 +217,7 @@ class MenuSection{
         this.foods = [];
     }
 
-    generateItems(){ //Generate HTML for each item in this section
+    async generateItems(){ //Generate HTML for each item in this section
         //Making a table
         var section = document.createElement("section");
         var h2 = document.createElement("h2");
@@ -238,7 +228,7 @@ class MenuSection{
 
         var i = 0;
         const width = 4;
-        var logIn = checkLoggedIn();
+        var logIn = await checkLoggedIn();
         console.log(logIn);
         while(i < this.foods.length){
             var newRow = table.insertRow(-1);

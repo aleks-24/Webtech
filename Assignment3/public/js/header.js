@@ -9,11 +9,11 @@ fetch('api/user', {
     const body = await ret.json();
     if (!body.success) {
         // not logged in
-        anchor.href = "/login.html";
+        anchor.href = "login.html";
         anchor.innerText = "Login";
     } else {
         // logged in
-        anchor.href = "/user.html";
+        anchor.href = "user.html";
         anchor.innerText = body.user.username;
     }
 });
