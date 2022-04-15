@@ -1,3 +1,4 @@
+//this file generates the menu through DOM
 content = document.getElementById("content");
 
 async function checkLoggedIn(){
@@ -81,11 +82,10 @@ class Menu{
             var orderButton = document.createElement("button");
             orderButton.textContent = "Order";
             basket.appendChild(orderButton);
-            orderButton.onclick = function(){
-                // TODO: convert to fetch
-                var xhr = new XMLHttpRequest()
-                xhr.open("POST", "api/user/orders", true);
-                xhr.send();
+            orderButton.onclick = async function(){
+                await fetch('api/user/orders',{
+                    method: 'POST'
+                });
                 window.location.href = 'user.html';
             }
         } else {
@@ -266,7 +266,6 @@ class MenuSection{
         var i = 0;
         const width = 4;
         var logIn = await checkLoggedIn();
-        console.log(logIn);
         while(i < this.foods.length){
             var newRow = this.table.insertRow(-1);
             var iterOld = i;

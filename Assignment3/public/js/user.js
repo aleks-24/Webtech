@@ -1,3 +1,4 @@
+//this file gets the user and order information from the API and displays it using DOM
 var user;
 
 //gets the current User
@@ -13,6 +14,7 @@ async function getUser(){
         paragraph.innerText = capitalize(key) + ": " + value;
         a.appendChild(paragraph);
     }
+    getOrders(); //get users orders
 }
 
 //get all orders
@@ -27,15 +29,27 @@ async function getOrders(){
     //print orders
     for(const order of orders){
         if (order.products.length != 0){
+            
             var section = document.createElement("SECTION");
             section.style.borderStyle = "dashed";
+
             var header = document.createElement("H2");
-            header.innerText = "Order " + order.id + ":";
+            header.innerText = "Order " + order.id + ": " + order.status;
             section.appendChild(header);
+
             for(const product of order.products){
+
                 var img = document.createElement("IMG");
-                var paragraph = document.createElement("P");
-                paragraph.innerText = product.id + ": " + product.quantity;
+                img.setAttribute("src","resources/Food/" + product.id + ".jpg");
+                img.setAttribute("alt", "Delicious food!");
+                img.setAttribute("loading", "lazy")
+                img.classList.add("menuItem");
+
+                var paragraph = document.createElement("H3");
+                paragraph.innerText = "Amount: " + product.quantity;
+                paragraph.style = "position: relative; left : 30px";
+
+                section.appendChild(img);
                 section.appendChild(paragraph);
             }
             a.appendChild(section);
@@ -43,7 +57,6 @@ async function getOrders(){
     }
 }
 getUser();
-getOrders();
 
 //capitalize first letter
 function capitalize(string) {
