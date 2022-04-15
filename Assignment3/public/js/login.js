@@ -1,6 +1,6 @@
-async function login(e) {
-    console.log(e);
-
+async function login() {
+    document.getElementById("loginError").innerText = "";
+    
     const data = {};
     data.username = document.getElementById("loginUsername").value;
     data.password = document.getElementById("loginPassword").value;
@@ -13,10 +13,17 @@ async function login(e) {
         body: JSON.stringify(data),
     });
 
-    console.log(ret);
+    const body = await ret.json();
+    if (body.success) {
+        window.location.href = "/index.html";
+    } else {
+        document.getElementById("loginError").innerText = body.message;
+    }
 }
 
 async function register() {
+    document.getElementById("registerError").innerText = "";
+
     const data = {};
     data.username = document.getElementById("username").value;
     data.password = document.getElementById("password").value;
@@ -35,5 +42,10 @@ async function register() {
         body: JSON.stringify(data),
     });
 
-    console.log(ret);
+    const body = await ret.json();
+    if (body.success) {
+        window.location.href = "/index.html";
+    } else {
+        document.getElementById("registerError").innerText = body.message;
+    }
 }
